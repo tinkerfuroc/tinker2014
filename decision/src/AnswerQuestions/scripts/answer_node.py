@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # File          : answer_node.py
-# Module        : AnswerQuestions
+# Module        : AnswerQuestions@tinker
 # Author        : bss
 # Creation date : 2014-05-09
-#  Last modified: 2014-12-29, 00:16:12
+#  Last modified: 2014-12-29, 00:47:05
 # Description   : Answer question listed in resource/
 #
 
@@ -26,7 +26,7 @@ class answer_handler:
         self.force_allow = False
         self.count = 0
         self.rcdir = rospkg.RosPack().get_path('AnswerQuestions') \
-                + '/../../../share/AnswerQuestions/resource/'
+                + '/../../../share/AnswerQuestions'
 
     def start(self, req):
         print('start working')
@@ -135,7 +135,7 @@ def main(argv):
             ah.force_allow = True
 
     # question
-    fp = open(ah.rcdir + 'questions.txt', 'r')
+    fp = open(ah.rcdir + '/questions.txt', 'r')
     ques = []
     for line in fp.readlines():
         sentence = line.strip().upper()
@@ -143,7 +143,7 @@ def main(argv):
             ques.append(str(sentence))
     fp.close()
     # answer
-    fp = open(ah.rcdir + 'answers.txt', 'r')
+    fp = open(ah.rcdir + '/answers.txt', 'r')
     ans = []
     for line in fp.readlines():
         sentence = line.strip()
