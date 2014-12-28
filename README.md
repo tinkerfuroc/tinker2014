@@ -15,31 +15,48 @@ tinker2014/
 
 |-dev/
 
+|-downloaded/
+
 |-driver/
 
 |-logic/
 
 |-decision/
 
-在tinker2014文件夹下放4个catkin workspace，
+在tinker2014文件夹下放5个catkin workspace，
 各自独立开发。
-（可能要加一个包放下载来的package）
+其中downloaded中放下载下来的包，
+dev中放刚创建的包
 
 缺点是编译时需要cd到各个workspace下执行catkin_make。
 不能自动分析不同workspace之间的依赖来决定是否编译其他workspace。
 
-可以在.bashrc中添加以下内容：
+按此方法下载tinker2014的源码：
 
-    source ~/tinker2014/dev/devel/setup.bash
-    source ~/tinker2014/driver/devel/setup.bash --extend
-    source ~/tinker2014/logic/devel/setup.bash --extend
-    source ~/tinker2014/decision/devel/setup.bash --extend
+    cd ~
+    git clone https://github.com/<YOUR_NAME>/tinker2014
+
+在.bashrc中添加以下内容：
+
+    TINKER_WORKSPACE=~/tinker2014
+    source ~/tinker2014/tinkersetup.bash
+
+建议在.bashrc中添加：
+
+    ROS_WORKSPACE=TINKER_WORKSPACE
 
 ##命名规则
 
 目前存在不常用的package、node很难找的情况。
-建议规定一下package和node的命名规则。
-（还没想好怎么起名比较合适）
+暂时规定package和node的命名规则：
+
+downloaded中的包保留原名。
+
+driver中的包以d开头，然后按驼峰命名法命名，如dSerial
+
+logic中的包以l开头，然后按驼峰命名法命名，如lCheckXXX
+
+decision中的包直接按驼峰命名法命名，首字母大写，如AnswerQuestions
 
 ##协作模式
 
