@@ -43,7 +43,7 @@ dev中放刚创建的包
 
 建议在.bashrc中添加：
 
-    ROS_WORKSPACE=TINKER_WORKSPACE
+    ROS_WORKSPACE=$TINKER_WORKSPACE
 
 ##命名规则
 
