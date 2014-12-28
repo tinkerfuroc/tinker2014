@@ -4,7 +4,7 @@
 # Module        : AnswerQuestions
 # Author        : bss
 # Creation date : 2014-05-09
-#  Last modified: 2014-12-29, 00:05:43
+#  Last modified: 2014-12-29, 00:16:12
 # Description   : Answer question listed in resource/
 #
 
@@ -18,13 +18,15 @@ from std_msgs.msg import String
 from std_srvs.srv import *
 
 ANS = {}
-say_pub = rospy.Publisher('/say', String)
+say_pub = rospy.Publisher('/say', String, queue_size=1)
 
 class answer_handler:
     def __init__(self):
         self.allow = True
         self.force_allow = False
         self.count = 0
+        self.rcdir = rospkg.RosPack().get_path('AnswerQuestions') \
+                + '/../../../share/AnswerQuestions/resource/'
 
     def start(self, req):
         print('start working')
@@ -132,9 +134,8 @@ def main(argv):
         if o in ('-i'):
             ah.force_allow = True
 
-    rcdir = rospkg.RosPack().get_path('answer_questions') + '/resource/'
     # question
-    fp = open(rcdir + 'questions.txt', 'r')
+    fp = open(ah.rcdir + 'questions.txt', 'r')
     ques = []
     for line in fp.readlines():
         sentence = line.strip().upper()
@@ -142,7 +143,7 @@ def main(argv):
             ques.append(str(sentence))
     fp.close()
     # answer
-    fp = open(rcdir + 'answers.txt', 'r')
+    fp = open(ah.rcdir + 'answers.txt', 'r')
     ans = []
     for line in fp.readlines():
         sentence = line.strip()
