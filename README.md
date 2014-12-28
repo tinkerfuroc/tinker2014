@@ -45,6 +45,13 @@ dev中放刚创建的包
 
     ROS_WORKSPACE=$TINKER_WORKSPACE
 
+##使用方法
+
+与直接使用catkin管理ROS工作空间类似，
+TINKER_WORKSPACE下执行make相当于在各工作空间执行catkin_make，
+执行make clean相当于在各工作空间执行catkin_make clean。
+也支持make dev或make clean_dev等用法。
+
 ##命名规则
 
 目前存在不常用的package、node很难找的情况。
