@@ -4,7 +4,7 @@
 # Module        : answer_questions@tinker
 # Author        : bss
 # Creation date : 2014-05-09
-#  Last modified: 2015-01-01, 15:18:10
+#  Last modified: 2015-01-01, 15:40:00
 # Description   : Answer questions listed in resource/
 #
 
@@ -18,7 +18,7 @@ from std_msgs.msg import String
 from std_srvs.srv import *
 
 ANS = {}
-say_pub = rospy.Publisher('/say', String, queue_size=1)
+say_pub = rospy.Publisher('/say/sentence', String, queue_size=1)
 
 class answer_handler:
     def __init__(self):
@@ -63,12 +63,6 @@ class answer_handler:
         print(ques + '?')
         print('-' + ans)
     
-        try:
-            answer_once = rospy.ServiceProxy('/answer/answer_once', Empty)
-            answer_once()
-        except rospy.ServiceException, e:
-            print("Service call failed: %s"%e)
-
         #stop recognizer
         try:
             stop_pock = rospy.ServiceProxy('/recognizer/stop', Empty)
