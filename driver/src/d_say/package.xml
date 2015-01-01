@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>dSay</name>
+  <name>d_say</name>
   <version>0.0.0</version>
-  <description>The dSay package</description>
+  <description>The d_say package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
