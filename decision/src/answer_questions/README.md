@@ -18,11 +18,18 @@ rosrun answer_questions answer_node.py
 - answer_node.py
 
 ######订阅的topics
-- /recognizer/output([std_msgs/String](http://docs.ros.org/api/std_msgs/html/msg/String.html))
+- /recognizer/output ([std_msgs/String](http://docs.ros.org/api/std_msgs/html/msg/String.html))
 
-######发布的services
-- /answer_questions/start([std_srvs/Empty](http://docs.ros.org/api/std_srvs/html/srv/Empty.html))
-- /answer_questions/stop([std_srvs/Empty](http://docs.ros.org/api/std_srvs/html/srv/Empty.html))
+######发布的topics
+- /say/sentence ([std_msgs/String](http://docs.ros.org/api/std_msgs/html/msg/String.html))
+
+######调用的services
+- /recognizer/start ([std_srvs/Empty](http://docs.ros.org/api/std_srvs/html/srv/Empty.html))
+- /recognizer/stop ([std_srvs/Empty](http://docs.ros.org/api/std_srvs/html/srv/Empty.html))
+
+######提供的services
+- /answer_questions/start ([std_srvs/Empty](http://docs.ros.org/api/std_srvs/html/srv/Empty.html))
+- /answer_questions/stop ([std_srvs/Empty](http://docs.ros.org/api/std_srvs/html/srv/Empty.html))
 
 ######命令行参数
 - -h --help 帮助
