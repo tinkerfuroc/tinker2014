@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # file: init.py
 # created by bss at 2014-05-09
-# Last modified: 2015-01-01, 17:33:05
+# Last modified: 2015-01-01, 18:06:16
 # 初始化一组语音识别的任务
 #
 
@@ -51,7 +51,7 @@ def main(argv):
 def initDir(task):
     outdir = rospkg.RosPack().get_path('l_sphinx_wrapper') \
             + '/launches'
-    taskdir = outdir + '/' + task
+    taskdir = outdir + '/tasks/' + task
     os.system('mkdir ' + taskdir)
     os.system('touch ' + taskdir + '/sent.txt')
     os.system('touch ' + taskdir + '/gram.jsgf')
@@ -61,16 +61,16 @@ def initDir(task):
     fp.write('grammar ' + task + ';\n')
     fp.close()
 
-    fp = open(taskdir + '/' + task + '.launch', 'w')
+    fp = open(outdir + '/' + task + '.launch', 'w')
     fp.write('<launch>\n')
     fp.write('\n')
     fp.write('  <node name="recognizer" pkg="pocketsphinx" ' \
             + 'type="recognizer.py" output="screen">\n')
     fp.write('    <param name="fsg" ' \
-            + 'value="$(find l_sphinx_wrapper)/launches/' \
+            + 'value="$(find l_sphinx_wrapper)/launches/tasks/' \
             + task + '/finite_state.fsg"/>\n')
     fp.write('    <param name="dict" ' \
-            + 'value="$(find l_sphinx_wrapper)/launches/'
+            + 'value="$(find l_sphinx_wrapper)/launches/tasks/'
             + task + '/words.dic"/>\n')
     fp.write('  </node>\n')
     fp.write('\n')
