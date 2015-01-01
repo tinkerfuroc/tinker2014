@@ -12,7 +12,7 @@
 ```
 
 这条命令会创建$TINKER_WORKSPACE/share/l_sphinx_wrapper/launches/TASK_NAME/，
-其中有文件 sent.txt, gram.jsgf。
+其中有文件 sent.txt, gram.jsgf, TASK_NAME.launch 。
 
 sent.txt 和 gram.jsgf 的编辑方法：
 - 编辑sent.txt，写入可能出现的词语，如
@@ -33,7 +33,7 @@ sent.txt 和 gram.jsgf 的编辑方法：
   <hellotinker> = HELLO <names>;
   ```
 
-编辑完成后，生成 .dict, .fsg, .launch 文件：
+编辑完成后，生成 .dict, .fsg 文件：
 
 ```bash
 ./init.py -t TASK_NAME

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # file: input2dict.py
 # created by bss at 2014-04-30
-# Last modified: 2015-01-01, 17:26:37
+# Last modified: 2015-01-01, 17:36:04
 # 把输入转化为字典
 #
 
@@ -46,7 +46,7 @@ def processTask(task):
             + '/../../../ui/l_sphinx_wrapper'
     taskdir = rospkg.RosPack().get_path('l_sphinx_wrapper') \
             + '/launches/' + task
-    fp = open(scriptdir + 'cmudict_SPHINX_40', 'r')
+    fp = open(scriptdir + '/cmudict_SPHINX_40', 'r')
     cmudict = {}
     for line in fp.readlines():
         col = line.strip().upper().split('\t', 1)

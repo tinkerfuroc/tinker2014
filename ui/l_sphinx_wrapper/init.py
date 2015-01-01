@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # file: init.py
 # created by bss at 2014-05-09
-# Last modified: 2015-01-01, 17:24:04
+# Last modified: 2015-01-01, 17:33:05
 # 初始化一组语音识别的任务
 #
 
@@ -56,7 +56,12 @@ def initDir(task):
     os.system('touch ' + taskdir + '/sent.txt')
     os.system('touch ' + taskdir + '/gram.jsgf')
 
-    fp = open(taskdir + task + '.launch', 'w')
+    fp = open(taskdir + '/gram.jsgf', 'w')
+    fp.write('#JSGF v1.0;\n')
+    fp.write('grammar ' + task + ';\n')
+    fp.close()
+
+    fp = open(taskdir + '/' + task + '.launch', 'w')
     fp.write('<launch>\n')
     fp.write('\n')
     fp.write('  <node name="recognizer" pkg="pocketsphinx" ' \
