@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>AnswerQuestions</name>
+  <name>answer_questions</name>
   <version>0.0.0</version>
-  <description>The AnswerQuestions package</description>
+  <description>The answer_questions package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
