@@ -1,0 +1,3 @@
+[submodule "ui/Google-Text-To-Speech"]
+	path = ui/Google-Text-To-Speech
+	url = https://github.com/JulienD/Google-Text-To-Speech
