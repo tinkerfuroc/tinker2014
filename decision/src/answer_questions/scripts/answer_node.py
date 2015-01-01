@@ -4,7 +4,7 @@
 # Module        : answer_questions@tinker
 # Author        : bss
 # Creation date : 2014-05-09
-#  Last modified: 2015-01-01, 12:10:24
+#  Last modified: 2015-01-01, 15:18:10
 # Description   : Answer questions listed in resource/
 #
 
@@ -160,8 +160,8 @@ def main(argv):
     # Listen to /recognizer/output from pocketsphinx, task:answer
     rospy.init_node('answer_node', anonymous=True)
     rospy.Subscriber('/recognizer/output', String, ah.getQuestionCallback)
-    rospy.Service("/answer/start", Empty, ah.start)
-    rospy.Service("/answer/stop", Empty, ah.stop)
+    rospy.Service("/answer_questions/start", Empty, ah.start)
+    rospy.Service("/answer_questions/stop", Empty, ah.stop)
     rospy.spin()
 
 if __name__ == '__main__':
