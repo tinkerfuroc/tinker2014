@@ -4,7 +4,7 @@
 # Module        : answer_questions@tinker
 # Author        : bss
 # Creation date : 2014-05-09
-#  Last modified: 2015-01-01, 12:10:24
+#  Last modified: 2015-01-01, 15:40:00
 # Description   : Answer questions listed in resource/
 #
 
@@ -18,7 +18,7 @@ from std_msgs.msg import String
 from std_srvs.srv import *
 
 ANS = {}
-say_pub = rospy.Publisher('/say', String, queue_size=1)
+say_pub = rospy.Publisher('/say/sentence', String, queue_size=1)
 
 class answer_handler:
     def __init__(self):
@@ -63,12 +63,6 @@ class answer_handler:
         print(ques + '?')
         print('-' + ans)
     
-        try:
-            answer_once = rospy.ServiceProxy('/answer/answer_once', Empty)
-            answer_once()
-        except rospy.ServiceException, e:
-            print("Service call failed: %s"%e)
-
         #stop recognizer
         try:
             stop_pock = rospy.ServiceProxy('/recognizer/stop', Empty)
@@ -160,8 +154,8 @@ def main(argv):
     # Listen to /recognizer/output from pocketsphinx, task:answer
     rospy.init_node('answer_node', anonymous=True)
     rospy.Subscriber('/recognizer/output', String, ah.getQuestionCallback)
-    rospy.Service("/answer/start", Empty, ah.start)
-    rospy.Service("/answer/stop", Empty, ah.stop)
+    rospy.Service("/answer_questions/start", Empty, ah.start)
+    rospy.Service("/answer_questions/stop", Empty, ah.stop)
     rospy.spin()
 
 if __name__ == '__main__':

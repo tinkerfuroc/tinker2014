@@ -52,6 +52,7 @@ ui文件夹中放启动脚本等等非ROS的程序。
 ```bash
 cd ~
 git clone https://github.com/<YOUR_NAME>/tinker2014
+git submodule updatupdate   # 克隆子模块
 ```
 
 在.bashrc中添加以下内容：
