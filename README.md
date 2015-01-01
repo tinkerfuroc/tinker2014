@@ -29,7 +29,10 @@ tinker2014/
 
 在tinker2014文件夹下放5个catkin workspace，
 各自独立开发。
+
 其中downloaded中放下载下来的package，
+package通过submodule的方式添加到tinker2014版本库中。
+
 dev中放刚创建或临时的package。
 
 downloaded中的package应尽量保持原样。
