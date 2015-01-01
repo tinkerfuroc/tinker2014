@@ -29,8 +29,10 @@ tinker2014/
 
 在tinker2014文件夹下放5个catkin workspace，
 各自独立开发。
-其中downloaded中放下载下来的包，
-dev中放刚创建或临时的包
+其中downloaded中放下载下来的package，
+dev中放刚创建或临时的package。
+
+downloaded中的package应尽量保持原样。
 
 另外，
 share文件夹中放资源文件(如*.jpg)，
@@ -84,11 +86,16 @@ make clean_driver   # 清理driver workspace
 ##命名规则
 
 目前存在不常用的package、node很难找的情况。
-暂时规定package和node的命名规则：
+暂时规定命名规则：
 
-downloaded中的包保留原名。
+####package
 
-driver中的包以d开头，
+命名前可以到这个网站看有没有同名的package：
+http://www.ros.org/browse/list.php
+
+- downloaded中的package保留原名
+
+- driver中的package以d开头，
 然后按
 ~~驼峰命名法命名，如dSerial~~
 ROS建议的方法命名：
@@ -96,7 +103,7 @@ ROS建议的方法命名：
 以下划线分隔，
 如d_serial
 
-logic中的包以l开头，
+- logic中的package以l开头，
 然后按
 ~~驼峰命名法命名，如lParser~~
 ROS建议的方法命名：
@@ -104,10 +111,35 @@ ROS建议的方法命名：
 以下划线分隔，
 如l_parser
 
-decision中的包直接按
+- decision中的package直接按
 ~~驼峰命名法命名，首字母大写，如AnswerQuestions~~
 ROS建议的方法命名，
 如answer_questions
+
+####node
+
+- 按ROS建议的方式命名：
+所有字母小写，
+以下划线分隔
+
+- 建议保留用于单元测试的node，命名时加上test_前缀
+
+####topic与service
+
+- 名字分为两部分，前半部分为去掉d_或l_前缀的package名，后半部分为该topic名。
+
+- topic名所有字母小写，
+以下划线分隔
+
+- 如d_say订阅的某topic可命名为/say/sentence
+
+####message
+
+- message名按大驼峰法命名，如DoorStatus.msg
+
+- 内部的变量名按小写加下划线命名，如is_open
+
+- 声明message的位置待讨论
 
 ##协作模式
 
