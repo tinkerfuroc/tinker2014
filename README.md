@@ -29,7 +29,10 @@ tinker2014/
 
 在tinker2014文件夹下放5个catkin workspace，
 各自独立开发。
+
 其中downloaded中放下载下来的package，
+package通过submodule的方式添加到tinker2014版本库中。
+
 dev中放刚创建或临时的package。
 
 downloaded中的package应尽量保持原样。
@@ -52,7 +55,7 @@ ui文件夹中放启动脚本等等非ROS的程序。
 ```bash
 cd ~
 git clone https://github.com/<YOUR_NAME>/tinker2014
-git submodule updatupdate   # 克隆子模块
+git submodule update   # 克隆子模块
 ```
 
 在.bashrc中添加以下内容：
