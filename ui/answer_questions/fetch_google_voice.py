@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# File          : fetch_google.py
+# File          : fetch_google_voice.py
 # Author        : bss
 # Creation date : 2014-05-10
-#  Last modified: 2015-01-01, 14:03:26
+#  Last modified: 2015-01-01, 14:40:54
 # Description   : Hacking google tts api
 #
 
@@ -12,7 +12,7 @@ import os
 import rospkg
 
 script = rospkg.RosPack().get_path('answer_questions') \
-        + '/../../../ui/Google-Translate-TTS/GoogleTTS.py'
+        + '/../../../ui/Google-Text-To-Speech/GoogleTextToSpeech.py'
 mp3dir = rospkg.RosPack().get_path('answer_questions') \
         + '/../../../share/d_say/sounds'
 txtdir = rospkg.RosPack().get_path('answer_questions') \
