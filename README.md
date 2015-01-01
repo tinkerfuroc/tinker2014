@@ -131,7 +131,7 @@ ROS建议的方法命名，
 - topic名所有字母小写，
 以下划线分隔
 
-- 如d_say发布的某topic可命名为/say/sentence
+- 如d_say订阅的某topic可命名为/say/sentence
 
 ####message
 
