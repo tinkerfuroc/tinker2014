@@ -4,3 +4,4 @@
 [submodule "downloaded/src/pocketsphinx"]
 	path = downloaded/src/pocketsphinx
 	url = https://github.com/tinkerfuroc/pocketsphinx
+    tag = 0.2.3
