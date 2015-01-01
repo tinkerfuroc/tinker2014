@@ -1,3 +1,6 @@
 [submodule "ui/Google-Text-To-Speech"]
 	path = ui/Google-Text-To-Speech
 	url = https://github.com/tinkerfuroc/Google-Text-To-Speech
+[submodule "downloaded/src/pocketsphinx"]
+	path = downloaded/src/pocketsphinx
+	url = https://github.com/tinkerfuroc/pocketsphinx
