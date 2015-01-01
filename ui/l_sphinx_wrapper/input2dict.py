@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # file: input2dict.py
 # created by bss at 2014-04-30
-# Last modified: 2014-05-09, 17:46:48
+# Last modified: 2015-01-01, 17:26:37
 # 把输入转化为字典
 #
 
@@ -42,16 +42,18 @@ def main(argv):
             sys.exit(0)
 
 def processTask(task):
-    furocdir = rospkg.RosPack().get_path('pocketsphinx') + '/furoc/'
-    taskdir = furocdir + task + '/'
-    fp = open(furocdir + 'cmudict_SPHINX_40', 'r')
+    scriptdir = rospkg.RosPack().get_path('l_sphinx_wrapper') \
+            + '/../../../ui/l_sphinx_wrapper'
+    taskdir = rospkg.RosPack().get_path('l_sphinx_wrapper') \
+            + '/launches/' + task
+    fp = open(scriptdir + 'cmudict_SPHINX_40', 'r')
     cmudict = {}
     for line in fp.readlines():
         col = line.strip().upper().split('\t', 1)
         cmudict[col[0]] = col[1]
     fp.close()
 
-    fp = open(taskdir + 'sent.txt', 'r')
+    fp = open(taskdir + '/sent.txt', 'r')
     words = []
     for line in fp.readlines():
         col = line.strip().upper().split()
@@ -61,7 +63,7 @@ def processTask(task):
 
     words = list(set(words))
 
-    fp = open(taskdir + 'words.dic', 'w')
+    fp = open(taskdir + '/words.dic', 'w')
     for word in words:
         isSucceed = False
         try:
@@ -80,3 +82,4 @@ def processTask(task):
 
 if __name__ == '__main__':
     main(sys.argv)
+

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # file: jsgf2fsg.py
 # created by bss at 2014-04-30
-# Last modified: 2014-05-09, 10:57:52
+# Last modified: 2015-01-01, 17:28:30
 # 把 jsgf 转化为 fsg 语法格式
 #
 
@@ -43,10 +43,12 @@ def main(argv):
             sys.exit(0)
 
 def processTask(task):
-    furocdir = rospkg.RosPack().get_path('pocketsphinx') + '/furoc/'
-    taskdir = furocdir + task + '/'
-    os.system('sphinx_jsgf2fsg -jsgf ' + taskdir + 'gram.jsgf -fsg '
-        + taskdir + 'finite_state.fsg')
+    scriptdir = rospkg.RosPack().get_path('l_sphinx_wrapper') \
+            + '/../../../ui/l_sphinx_wrapper'
+    taskdir = rospkg.RosPack().get_path('l_sphinx_wrapper') \
+            + '/launches/' + task
+    os.system('sphinx_jsgf2fsg -jsgf ' + taskdir + '/gram.jsgf -fsg '
+        + taskdir + '/finite_state.fsg')
 
 if __name__ == '__main__':
     main(sys.argv)

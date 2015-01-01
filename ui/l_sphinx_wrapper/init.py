@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # file: init.py
 # created by bss at 2014-05-09
-# Last modified: 2015-01-01, 17:17:09
+# Last modified: 2015-01-01, 17:24:04
 # 初始化一组语音识别的任务
 #
 
@@ -49,9 +49,9 @@ def main(argv):
             sys.exit(0)
 
 def initDir(task):
-    scriptdir = rospkg.RosPack().get_path('l_sphinx_wrapper') \
-            + '/../../../ui/l_sphinx_wrapper'
-    taskdir = scriptdir + '/' + task
+    outdir = rospkg.RosPack().get_path('l_sphinx_wrapper') \
+            + '/launches'
+    taskdir = outdir + '/' + task
     os.system('mkdir ' + taskdir)
     os.system('touch ' + taskdir + '/sent.txt')
     os.system('touch ' + taskdir + '/gram.jsgf')
@@ -75,7 +75,6 @@ def initDir(task):
 def processTask(task):
     scriptdir = rospkg.RosPack().get_path('l_sphinx_wrapper') \
             + '/../../../ui/l_sphinx_wrapper'
-    taskdir = scriptdir + '/' + task
     os.system('python ' + scriptdir + '/input2dict.py -t ' + task)
     os.system('python ' + scriptdir + '/jsgf2fsg.py -t ' + task)
     
