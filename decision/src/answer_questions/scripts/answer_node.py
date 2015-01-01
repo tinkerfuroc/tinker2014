@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # File          : answer_node.py
-# Module        : AnswerQuestions@tinker
+# Module        : answer_questions@tinker
 # Author        : bss
 # Creation date : 2014-05-09
-#  Last modified: 2014-12-29, 00:47:05
-# Description   : Answer question listed in resource/
+#  Last modified: 2015-01-01, 12:10:24
+# Description   : Answer questions listed in resource/
 #
 
 import sys
@@ -25,8 +25,8 @@ class answer_handler:
         self.allow = True
         self.force_allow = False
         self.count = 0
-        self.rcdir = rospkg.RosPack().get_path('AnswerQuestions') \
-                + '/../../../share/AnswerQuestions'
+        self.rcdir = rospkg.RosPack().get_path('answer_questions') \
+                + '/../../../share/answer_questions'
 
     def start(self, req):
         print('start working')
