@@ -33,3 +33,9 @@ rosrun d_ros_to_cv test_reading_image
 ```bash
 sudo apt-get install ros-indigo-openni2-launch
 ```
+
+可能需要的软件：
+
+- https://github.com/PrimeSense/Sensor
+
+- https://github.com/PrimeSense/Sensor
