@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(d_reading_image)
+project(d_ros_to_cv)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)

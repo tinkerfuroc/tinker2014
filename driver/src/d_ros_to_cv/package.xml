@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>d_reading_image</name>
+  <name>d_ros_to_cv</name>
   <version>0.0.0</version>
-  <description>The d_reading_image package</description>
+  <description>The d_ros_to_cv package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
