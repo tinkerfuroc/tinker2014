@@ -31,5 +31,5 @@ rosrun d_ros_to_cv test_reading_image
 安装必要的软件包：
 
 ```bash
-sudo apt-get install ros-indigo-openni2_launch
+sudo apt-get install ros-indigo-openni2-launch
 ```
