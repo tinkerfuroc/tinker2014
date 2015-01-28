@@ -1,0 +1,35 @@
+<!-- Project      : openni_pcl_grabber -->
+<!-- File         : primesense_to_pcl.launch -->
+<!-- created by bss at 2014-07-12 -->
+<!-- Last modified: 2015-01-28, 21:38:45
+    !-->
+
+
+<launch>
+
+  <node pkg="nodelet" type="nodelet" args="manager" name="record_player_manager" output="screen" />
+
+  <node pkg="image_proc" type="image_proc" name="ip_node1" ns="camera/rgb" />
+
+  <!-- convert metric -->
+  <node pkg="nodelet" type="nodelet" name="metric_rect" args="load depth_image_proc/convert_metric record_player_manager --no-bond">
+    <remap from="image_raw" to="/depth/image_raw" />
+    <remap from="image" to="/depth/image_metric" />
+  </node>
+
+  <!-- depth image to xyz -->
+  <node pkg="nodelet" type="nodelet" name="img2pts" args="load depth_image_proc/point_cloud_xyz record_player_manager --no-bond">
+    <remap from="camera_info" to="/depth/image" />
+    <remap from="image_rect" to="/depth/image" />
+    <remap from="points" to="/pcl/points2_xyz" />
+  </node>
+
+  <!-- depth + rgb -> xyzrgb -->
+  <node pkg="nodelet" type="nodelet" name="img2cloud" args="load depth_image_proc/point_cloud_xyzrgb record_player_manager --no-bond">
+    <remap from="depth_registered/image_rect" to="/depth/image_metric" />
+    <remap from="rgb/image_rect_color" to="/rgb/image" />
+    <remap from="rgb/camera_info" to="/rgb/camera_info" />
+    <remap from="depth_registered/points" to="/pcl/points2" />
+  </node>
+
+</launch>
