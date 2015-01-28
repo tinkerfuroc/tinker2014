@@ -2,7 +2,7 @@
 // File         : reading_pointcloud.cpp
 // Author       : bss
 // Creation Date: 2014-07-12
-// Last modified: 2015-01-28, 21:40:59
+// Last modified: 2015-01-28, 21:59:30
 // Description  : convert ros-style pointcloud to pcl-style.
 // 
 
@@ -16,8 +16,8 @@ CloudConverter::CloudConverter()
     , ready_xyz_(false)
     , ready_xyzrgb_(false)
 {
-    sub_xyz_ = nh_.subscribe<pcl::PointCloud<pcl::PointXYZ> >("/openni/points2_xyz", 1, &CloudConverter::cloudXYZCb, this);
-    sub_xyzrgb_ = nh_.subscribe<pcl::PointCloud<pcl::PointXYZRGB> >("/openni/points2", 1, &CloudConverter::cloudXYZRGBCb, this);
+    sub_xyz_ = nh_.subscribe<pcl::PointCloud<pcl::PointXYZ> >("/pcl/points2_xyz", 1, &CloudConverter::cloudXYZCb, this);
+    sub_xyzrgb_ = nh_.subscribe<pcl::PointCloud<pcl::PointXYZRGB> >("/pcl/points2", 1, &CloudConverter::cloudXYZRGBCb, this);
 }
 
 CloudConverter::~CloudConverter()
