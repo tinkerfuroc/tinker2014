@@ -1,8 +1,8 @@
 // Project      : reading_pointcloud
-// File         : show_xyz.cpp
+// File         : show_xyzrgb.cpp
 // Author       : bss
 // Creation Date: 2014-07-12
-// Last modified: 2015-01-28, 21:41:21
+// Last modified: 2015-01-29, 00:57:33
 // Description  : show ros-style pointcloud.
 // 
 
@@ -15,7 +15,7 @@
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "test_sub_cloud_xyzrgb");
+    ros::init(argc, argv, "test_show_xyzrgb");
     ros::NodeHandle n;
     ros::Rate rate(13);
 

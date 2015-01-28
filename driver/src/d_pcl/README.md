@@ -18,6 +18,7 @@ roslaunch d_pcl primesense_to_pcl.launch    # 启动转换程序
 rosrun test_show_xyzrgb     # 用图形界面显示xyzrgb
 rosrun test_sub_xyz         # 命令行显示xyz
 rosrun test_sub_xyzrgb      # 命令行显示xyzrgb
+rosrun test_reading_pcd     # 读取pcd文件,从share/d_pcl下查找
 ```
 
 ###package信息
@@ -26,6 +27,7 @@ rosrun test_sub_xyzrgb      # 命令行显示xyzrgb
 - test_show_xyzrgb
 - test_sub_xyz
 - test_sub_xyzrgb
+- test_reading_pcd
 
 ######订阅的topics (launch文件)
 - /depth/image_raw  ([sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html))
