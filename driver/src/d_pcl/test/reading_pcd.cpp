@@ -1,8 +1,8 @@
 // Project      : reading_pointcloud
 // File         : reading_pcd.cpp
 // Author       : bss
-// Creation Date: 2014-07-12
-// Last modified: 2015-01-29, 02:16:09
+// Creation Date: 2015-01-29
+// Last modified: 2015-01-29, 02:27:28
 // Description  : show ros-style pointcloud.
 // 
 
