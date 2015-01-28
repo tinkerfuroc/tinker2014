@@ -123,6 +123,7 @@ add_library(reading_pointcloud
 add_executable(test_sub_xyz test/sub_xyz.cpp)
 add_executable(test_sub_xyzrgb test/sub_xyzrgb.cpp)
 add_executable(test_show_xyzrgb test/show_xyzrgb.cpp)
+add_executable(test_reading_pcd test/reading_pcd.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
@@ -151,6 +152,11 @@ target_link_libraries(test_show_xyzrgb
   ${catkin_LIBRARIES}
   ${PCL_LIBRARIES}
   ${OpenCV_LIBRARIES}
+)
+
+target_link_libraries(test_reading_pcd
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
 )
 
 #############
