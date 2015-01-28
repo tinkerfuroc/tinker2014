@@ -29,6 +29,7 @@ int main(int argc, char** argv)
         rate.sleep();
         if (!ros::ok())
         {
+            delete cc_;
             printf("Terminated by C-c.\n");
             return -1;
         }
