@@ -1,8 +1,8 @@
-// Project      : reading_pointcloud
+// Project      : d_pcl
 // File         : reading_pcd.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-01-29, 23:13:52
+// Last modified: 2015-01-29, 23:25:59
 // Description  : read pcd from file
 // 
 
