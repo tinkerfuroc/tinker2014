@@ -124,6 +124,7 @@ add_executable(test_sub_xyz test/sub_xyz.cpp)
 add_executable(test_sub_xyzrgb test/sub_xyzrgb.cpp)
 add_executable(test_show_xyzrgb test/show_xyzrgb.cpp)
 add_executable(test_reading_pcd test/reading_pcd.cpp)
+add_executable(test_reading_pcds test/reading_pcds.cpp)
 add_executable(test_writing_pcds test/writing_pcds.cpp)
 
 ## Add cmake target dependencies of the executable/library
@@ -156,6 +157,11 @@ target_link_libraries(test_show_xyzrgb
 )
 
 target_link_libraries(test_reading_pcd
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+)
+
+target_link_libraries(test_reading_pcds
   ${catkin_LIBRARIES}
   ${PCL_LIBRARIES}
 )

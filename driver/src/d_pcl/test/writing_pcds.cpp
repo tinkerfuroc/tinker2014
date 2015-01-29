@@ -2,7 +2,7 @@
 // File         : writing_pcds.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-01-29, 23:27:02
+// Last modified: 2015-01-30, 00:30:44
 // Description  : show ros-style pointcloud.
 // 
 
@@ -45,7 +45,7 @@ int main(int argc, char** argv)
         else if (argv[i][0] != '-')
         {
             // safety check
-            for (size_t j = 0; 0&&j < strlen(argv[i]); j++)
+            for (size_t j = 0; j < strlen(argv[i]); j++)
             {
                 if (argv[i][j] == '.' || argv[i][j] == '/')
                 {
@@ -121,6 +121,7 @@ int main(int argc, char** argv)
 
 void Usage()
 {
+    printf("\n");
     printf("test_writing_pcds node in d_pcl.\n");
     printf("Usage: rosrun d_pcl test_writing_pcds ");
     printf("[OPTION] DEST\n");
