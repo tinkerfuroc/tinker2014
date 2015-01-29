@@ -13,7 +13,13 @@ Description: 将ros的Image转换为OpenCV支持的格式
 
 
 ```bash
-rosrun d_ros_to_cv test_reading_image
+rosrun d_cv test_reading_image
+```
+
+可能需要启动的package:
+
+```bash
+rosrun openni2_camera openni2_camera_node
 ```
 
 ###package信息

@@ -103,7 +103,6 @@ http://www.ros.org/browse/list.php
 
 - driver中的package以d开头，
 然后按
-~~驼峰命名法命名，如dSerial~~
 ROS建议的方法命名：
 所有字母小写，
 以下划线分隔，
@@ -111,14 +110,12 @@ ROS建议的方法命名：
 
 - logic中的package以l开头，
 然后按
-~~驼峰命名法命名，如lParser~~
 ROS建议的方法命名：
 所有字母小写，
 以下划线分隔，
 如l_parser
 
 - decision中的package直接按
-~~驼峰命名法命名，首字母大写，如AnswerQuestions~~
 ROS建议的方法命名，
 如answer_questions
 
