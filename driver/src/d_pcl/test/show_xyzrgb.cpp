@@ -1,8 +1,8 @@
-// Project      : reading_pointcloud
+// Project      : d_pcl
 // File         : show_xyzrgb.cpp
 // Author       : bss
 // Creation Date: 2014-07-12
-// Last modified: 2015-01-29, 00:57:33
+// Last modified: 2015-01-29, 23:26:17
 // Description  : show ros-style pointcloud.
 // 
 

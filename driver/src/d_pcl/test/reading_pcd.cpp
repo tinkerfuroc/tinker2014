@@ -1,9 +1,9 @@
-// Project      : reading_pointcloud
+// Project      : d_pcl
 // File         : reading_pcd.cpp
 // Author       : bss
-// Creation Date: 2014-07-12
-// Last modified: 2015-01-29, 02:16:09
-// Description  : show ros-style pointcloud.
+// Creation Date: 2015-01-29
+// Last modified: 2015-01-29, 23:25:59
+// Description  : read pcd from file
 // 
 
 #include <stdio.h>
@@ -38,21 +38,11 @@ int main(int argc, char** argv)
         {
             Usage();
         }
-        else if (strcmp(argv[i], "-i") == 0 ||
-                strcmp(argv[i], "--input") == 0)
+        else if (argv[i][0] != '-')
         {
-            ++i;
-            if (i == argc)
-            {
-                printf("Error: please input pcd file as a parameter.\n");
-                return -1;
-            }
-            else
-            {
-                pcd_name = argv[i];
-                pcd_path = package_path + "/../../../share/d_pcl/"
-                        + argv[i];
-            }
+            pcd_name = argv[i];
+            pcd_path = package_path + "/../../../share/d_pcl/"
+                    + argv[i];
         }
         else if (strcmp(argv[i], "-r") == 0 ||
                 strcmp(argv[i], "--rate") == 0)
@@ -60,7 +50,7 @@ int main(int argc, char** argv)
             ++i;
             if (i == argc)
             {
-                printf("Error: please input pcd file as a parameter.\n");
+                printf("Error: please input rate as a parameter.\n");
                 return -1;
             }
             else
@@ -98,6 +88,7 @@ int main(int argc, char** argv)
         msg->points.push_back(cloud->points[i]);
     }
 
+    printf("Init ok\n");
     // publish topic
     while (ros::ok())
     {
@@ -113,14 +104,16 @@ int main(int argc, char** argv)
 
 void Usage()
 {
-    printf("test_reading_pcd node in d_pcl, usage:\n");
-    printf("读入一个pcd文件，并发送\n");
+    printf("test_reading_pcd node in d_pcl\n");
+    printf("Usage: rosrun d_pcl test_reading_pcd \n");
+    printf("[OPTION] SOURCE\n");
+    printf("读入一个pcd文件(SOURCE)，并发送\n");
     printf("不要尝试过于不合法的输入\n");
+    printf("SOURCE: input file name(put it in ui/d_pcl).\n");
     printf("-h,--help: print help message.\n");
-    printf("-i,--input: input file name(put it in ui/d_pcl).\n");
     printf("-r,--rate: sending rate, in Hz.\n");
     printf("\n");
     printf("example:\n");
-    printf("rosrun d_pcl test_reading_pcd -i test.pcd\n");
+    printf("rosrun d_pcl test_reading_pcd test.pcd\n");
 }
 
