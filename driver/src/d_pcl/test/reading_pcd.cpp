@@ -2,7 +2,7 @@
 // File         : reading_pcd.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-01-29, 22:16:44
+// Last modified: 2015-01-29, 23:13:52
 // Description  : read pcd from file
 // 
 
@@ -88,6 +88,7 @@ int main(int argc, char** argv)
         msg->points.push_back(cloud->points[i]);
     }
 
+    printf("Init ok\n");
     // publish topic
     while (ros::ok())
     {

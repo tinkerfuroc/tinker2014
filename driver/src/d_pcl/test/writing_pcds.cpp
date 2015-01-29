@@ -2,7 +2,7 @@
 // File         : writing_pcds.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-01-29, 22:37:21
+// Last modified: 2015-01-29, 23:18:16
 // Description  : show ros-style pointcloud.
 // 
 
@@ -44,6 +44,16 @@ int main(int argc, char** argv)
         }
         else if (argv[i][0] != '-')
         {
+            // safety check
+            for (size_t j = 0; 0&&j < strlen(argv[i]); j++)
+            {
+                if (argv[i][j] == '.' || argv[i][j] == '/')
+                {
+                    printf("Error: Invalid dir.");
+                    return -1;
+                }
+            }
+            // store name
             pcd_name = argv[i];
             pcd_path = package_path + "/../../../share/d_pcl/"
                     + argv[i];
@@ -63,6 +73,36 @@ int main(int argc, char** argv)
             }
         }
     }
+
+    // if dir exists
+    std::string cmd;
+    cmd = "[ -d \"" + pcd_path + "\" ]";
+    printf("check: ");
+    bool dir_not_exist = system(cmd.c_str());
+    fflush(stdout);
+    if (dir_not_exist)    // not exist
+    {
+        printf("will create new dir.\n");
+        cmd = "mkdir " + pcd_path;
+        system(cmd.c_str());
+    }
+    else    // exist
+    {
+        printf("dir already exists, clear it? [Y/n]");
+        char ch = getchar();
+        if ('Y' == ch || 'y' == ch || '\r' == ch || '\n' == ch)
+        {
+            printf("will clear dir.\n");
+            cmd = "rm " + pcd_path + "/*.*";
+            system(cmd.c_str());
+        }
+        else
+        {
+            printf("Bye!\n");
+            return 0;
+        }
+    }
+    fflush(stdout);
     
     // init ros
     ros::init(argc, argv, "test_writing_pcds");
@@ -98,10 +138,11 @@ void getCloudCb(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr& msg)
 {
     pcl::PointCloud<pcl::PointXYZRGB> cloud;
 
-    cloud.width = msg->width;
+    cloud.width = msg->width;    // looks bad
     cloud.height = msg->height;
     cloud.is_dense = false;
     cloud.points.resize(cloud.width * cloud.height);
+    cloud.points.clear();
     for (size_t i = 0; i < msg->points.size(); i++)
     {
         cloud.points.push_back(msg->points[i]);
@@ -112,5 +153,4 @@ void getCloudCb(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr& msg)
     ss << pcd_path << "/pcd" << count++ << ".pcd";
     pcl::io::savePCDFileASCII(ss.str().c_str(), cloud);
 }
-
 
