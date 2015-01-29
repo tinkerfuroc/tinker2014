@@ -1,9 +1,9 @@
 // Project      : reading_pointcloud
-// File         : reading_pcd.cpp
+// File         : writing_pcds.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-01-29, 22:16:44
-// Description  : read pcd from file
+// Last modified: 2015-01-29, 22:37:21
+// Description  : show ros-style pointcloud.
 // 
 
 #include <stdio.h>
@@ -15,14 +15,18 @@
 
 // print usage of this node
 void Usage();
+// callback, when recv pointcloud
+void getCloudCb(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr& msg);
+
+int count = 0;
+// pcd file path
+std::string pcd_path = "";
 
 int main(int argc, char** argv)
 {
     printf("Init\n");
 
     std::string package_path = ros::package::getPath("d_pcl");
-    // pcd file path
-    std::string pcd_path = "";
     std::string pcd_name = "";
 
     int rate_Hz = 5;
@@ -59,60 +63,54 @@ int main(int argc, char** argv)
             }
         }
     }
-
-    // load the file
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(
-            new pcl::PointCloud<pcl::PointXYZRGB>);
-    if (pcl::io::loadPCDFile<pcl::PointXYZRGB>(pcd_path.c_str(), *cloud) == -1)
-    {
-        printf("Couldn't read file %s\n", pcd_path.c_str());
-        return -1;
-    }
-
+    
     // init ros
-    ros::init(argc, argv, "test_reading_pcd");
+    ros::init(argc, argv, "test_writing_pcds");
     ros::NodeHandle n;
     ros::Rate rate(rate_Hz);
-    ros::Publisher pub = n.advertise<pcl::PointCloud<pcl::PointXYZRGB> >(
-            "/pcl/points2", 1);
+    ros::Subscriber sub = n.subscribe<pcl::PointCloud<pcl::PointXYZRGB> >(
+            "/pcl/points2", 1, getCloudCb);
 
-    // read pcd
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr msg(
-            new pcl::PointCloud<pcl::PointXYZRGB>);
-    msg->header.frame_id = "test_pcd_" + pcd_name;
-    msg->height = cloud->height;
-    msg->width = cloud->width;
-
-    for (size_t i = 0; i < cloud->points.size(); ++i)
-    {
-        msg->points.push_back(cloud->points[i]);
-    }
-
-    // publish topic
+    // loop
     while (ros::ok())
     {
-        msg->header.stamp = pcl_conversions::toPCL(ros::Time::now());
-        pub.publish(msg);
-        ros::spinOnce();
         rate.sleep();
+        ros::spinOnce();
     }
-
-    printf("Bye!\n");
-    return 0;
 }
 
 void Usage()
 {
-    printf("test_reading_pcd node in d_pcl\n");
-    printf("Usage: rosrun d_pcl test_reading_pcd \n");
-    printf("[OPTION] SOURCE\n");
-    printf("读入一个pcd文件(SOURCE)，并发送\n");
+    printf("test_writing_pcds node in d_pcl.\n");
+    printf("Usage: rosrun d_pcl test_writing_pcds ");
+    printf("[OPTION] DEST\n");
+    printf("指定一个名字(DEST)，将/pcl/points2保存到该目录下\n");
     printf("不要尝试过于不合法的输入\n");
-    printf("SOURCE: input file name(put it in ui/d_pcl).\n");
+    printf("DEST: output dir name(put it in ui/d_pcl).\n");
     printf("-h,--help: print help message.\n");
     printf("-r,--rate: sending rate, in Hz.\n");
     printf("\n");
     printf("example:\n");
-    printf("rosrun d_pcl test_reading_pcd test.pcd\n");
+    printf("rosrun d_pcl test_writing_pcds tests\n");
 }
+
+void getCloudCb(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr& msg)
+{
+    pcl::PointCloud<pcl::PointXYZRGB> cloud;
+
+    cloud.width = msg->width;
+    cloud.height = msg->height;
+    cloud.is_dense = false;
+    cloud.points.resize(cloud.width * cloud.height);
+    for (size_t i = 0; i < msg->points.size(); i++)
+    {
+        cloud.points.push_back(msg->points[i]);
+    }
+
+    // save the file
+    std::stringstream ss;
+    ss << pcd_path << "/pcd" << count++ << ".pcd";
+    pcl::io::savePCDFileASCII(ss.str().c_str(), cloud);
+}
+
 
