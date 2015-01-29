@@ -2,7 +2,7 @@
 // File         : reading_pcd.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-01-30, 00:33:38
+// Last modified: 2015-01-30, 01:12:48
 // Description  : read pcd from file
 // 
 
@@ -106,7 +106,8 @@ int main(int argc, char** argv)
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(
             new pcl::PointCloud<pcl::PointXYZRGB>);
 
-    printf("Init ok\n");
+    printf("Init ok. ");
+    printf("Don't worry about the \"Could not find file\" warning.\n");
     // publish topic
     for (int i = 0; ros::ok(); i++)
     {
