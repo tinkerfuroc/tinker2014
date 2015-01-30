@@ -2,7 +2,7 @@
 // File         : writing_pcds.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-01-30, 17:59:19
+// Last modified: 2015-01-31, 00:39:05
 // Description  : show ros-style pointcloud.
 // 
 
@@ -45,18 +45,33 @@ int main(int argc, char** argv)
         else if (argv[i][0] != '-')
         {
             // safety check
+            bool safe = true;
             for (size_t j = 0; j < strlen(argv[i]); j++)
             {
                 if (argv[i][j] == '.' || argv[i][j] == '/')
                 {
-                    printf("Error: Invalid dir.");
-                    return 2;
+                    printf("Invalid dir \"%s\".", argv[i]);
+                    safe = false;
+                    break;
                 }
+            }
+            if (!safe)
+            {
+                continue;
             }
             // store name
             pcd_name = argv[i];
             pcd_path = package_path + "/../../../share/d_pcl/"
                     + argv[i];
+        }
+        else if (strcmp(argv[i], "-d") == 0 ||
+                strcmp(argv[i], "--dir") == 0)
+        {
+            ++i;
+            if (i == argc)
+            {
+                printf("Error: please input something after -d/--dir.\n");
+            }
         }
         else if (strcmp(argv[i], "-r") == 0 ||
                 strcmp(argv[i], "--rate") == 0)
