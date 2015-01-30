@@ -1,8 +1,8 @@
-// Project      : reading_pointcloud
+// Project      : d_pcl
 // File         : sub_xyz.cpp
 // Author       : bss
 // Creation Date: 2014-07-12
-// Last modified: 2015-01-28, 21:41:44
+// Last modified: 2015-01-29, 23:26:29
 // Description  : convert ros-style pointcloud to pcl-style.
 // 
 
