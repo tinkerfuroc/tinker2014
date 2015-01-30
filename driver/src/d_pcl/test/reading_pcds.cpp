@@ -2,12 +2,13 @@
 // File         : reading_pcd.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-01-30, 17:58:48
+// Last modified: 2015-01-30, 18:48:52
 // Description  : read pcd from file
 // 
 
 #include <stdio.h>
 #include <string>
+#include <vector>
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <pcl_ros/point_cloud.h>
@@ -15,6 +16,13 @@
 
 // print usage of this node
 void Usage();
+// analysis args
+bool AnalysisOpts(int argc, char** argv,
+        std::string& pcd_name, int& rate_Hz,
+        std::string& repeat_func, int& repeat_times);
+// 从文件读入pcd文件
+int LoadPCDs(std::vector<pcl::PointCloud<pcl::PointXYZRGB>::Ptr>* clouds,
+        std::string pcd_path);
 
 int main(int argc, char** argv)
 {
@@ -29,10 +37,123 @@ int main(int argc, char** argv)
     std::string repeat_func = "key";
     int repeat_times = 20;  // 延迟多少帧后重新发
 
+    // 处理命令行参数
+    if (!AnalysisOpts(argc, argv, pcd_name, rate_Hz,
+            repeat_func, repeat_times))
+    {
+        return false;
+    }
+    pcd_path = package_path + "/../../../share/d_pcl/" + pcd_name;
+
+    // init ros
+    ros::init(argc, argv, "test_reading_pcds");
+    ros::NodeHandle n;
+    ros::Rate rate(rate_Hz);
+    ros::Publisher pub = n.advertise<pcl::PointCloud<pcl::PointXYZRGB> >(
+            "/pcl/points2", 1);
+
+    printf("Loading from files...\n");
+    std::vector<pcl::PointCloud<pcl::PointXYZRGB>::Ptr > clouds;
+    const int pcd_num = LoadPCDs(&clouds, pcd_path);
+    if (pcd_num < 0)    // terminated
+    {
+        printf("Bye!\n");
+        return -1;
+    }
+    else if (pcd_num == 0)   // no file at all
+    {
+        printf("Error: no valid file in the dir.\n");
+        return -1;
+    }
+    printf("Don't worry about the \"Could not find file\" warning.\n");
+    printf("Found %d pcd file(s) in the dir.\n", pcd_num);
+
+    printf("Init ok. ");
+    // publish topic
+    for (int i = 0; ros::ok(); i++)
+    {
+        // finish a round
+        if (pcd_num == i)
+        {
+            if ("key" == repeat_func)
+            {
+                printf("Press a key to play again."
+                        "q+Enter or C-c to quit.");
+                char ch = getchar();
+                if ('q' == ch || 'Q' == ch)
+                {
+                    break;
+                }
+            }
+            else if ("delay" == repeat_func)
+            {
+                for (size_t j = 0; ros::ok() && j < repeat_times; j++)
+                {
+                    ros::spinOnce();
+                    rate.sleep();
+                }
+            }
+            else if ("always" != repeat_func)
+            {
+                break;  // don't repeat
+            }
+            // read again
+            i = -1;  // i++ after continue
+            continue;
+        }
+
+        // publish
+        std::stringstream id;
+        id << i;
+        clouds[i]->header.frame_id =
+                "test_pcd_" + pcd_name + "_" + id.str();
+        clouds[i]->header.stamp = pcl_conversions::toPCL(ros::Time::now());
+        pub.publish(clouds[i]);
+        ros::spinOnce();
+        rate.sleep();
+    }
+
+    printf("Bye!\n");
+    return 0;
+}
+
+int LoadPCDs(std::vector<pcl::PointCloud<pcl::PointXYZRGB>::Ptr>* clouds,
+        std::string pcd_path)
+{
+    int i;
+    for (i = 0; ros::ok(); i++)
+    {
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(
+                new pcl::PointCloud<pcl::PointXYZRGB>());
+
+        std::stringstream id;
+        id << i;
+        std::string file_path = pcd_path + "/pcd" + id.str() + ".pcd";
+
+        // load the file
+        if (pcl::io::loadPCDFile<pcl::PointXYZRGB>(file_path.c_str(),
+                *cloud) == -1)
+        {
+            return i;
+        }
+        else
+        {
+            clouds->push_back(cloud);
+        }
+    }
+    // termitated by Ctrl-C
+    return -1;
+}
+
+bool AnalysisOpts(int argc, char** argv,
+        std::string& pcd_name, int& rate_Hz,
+        std::string& repeat_func, int& repeat_times)
+{
+    std::string package_path = ros::package::getPath("d_pcl");
     if (argc <= 1)
     {
         Usage();
-        return 2;
+        return false;
     }
     for (int i = 1; i < argc; i++)  // 检查命令行参数
     {
@@ -43,8 +164,6 @@ int main(int argc, char** argv)
         else if (argv[i][0] != '-')
         {
             pcd_name = argv[i];
-            pcd_path = package_path + "/../../../share/d_pcl/"
-                    + argv[i];
         }
         else if (strcmp(argv[i], "-r") == 0 ||
                 strcmp(argv[i], "--rate") == 0)
@@ -53,7 +172,7 @@ int main(int argc, char** argv)
             if (i == argc)
             {
                 printf("Error: please input rate as a parameter.\n");
-                return 2;
+                return false;
             }
             else
             {
@@ -67,7 +186,7 @@ int main(int argc, char** argv)
             {
                 printf("Error: please select repeat function: ");
                 printf("always,delay,key,not\n");
-                return 2;
+                return false;
             }
             else
             {
@@ -79,7 +198,7 @@ int main(int argc, char** argv)
                     {
                         printf("Error: please input repeat times,");
                         printf("for example: -f delay 10\n");
-                        return 2;
+                        return false;
                     }
                     else
                     {
@@ -92,77 +211,10 @@ int main(int argc, char** argv)
         {
             printf("Error: unknown parameter.\n");
             Usage();
-            return 2;
+            return false;
         }
     }
-
-    // init ros
-    ros::init(argc, argv, "test_reading_pcds");
-    ros::NodeHandle n;
-    ros::Rate rate(rate_Hz);
-    ros::Publisher pub = n.advertise<pcl::PointCloud<pcl::PointXYZRGB> >(
-            "/pcl/points2", 1);
-
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(
-            new pcl::PointCloud<pcl::PointXYZRGB>);
-
-    printf("Init ok. ");
-    printf("Don't worry about the \"Could not find file\" warning.\n");
-    // publish topic
-    for (int i = 0; ros::ok(); i++)
-    {
-        std::stringstream id;
-        id << i;
-        std::string file_path = pcd_path + "/pcd" + id.str() + ".pcd";
-        // load the file
-        if (pcl::io::loadPCDFile<pcl::PointXYZRGB>(file_path.c_str(),
-                *cloud) == -1)
-        {
-            if (0 == i) // no file at all
-            {
-                printf("Error: no valid file in the dir.\n");
-                break;
-            }
-            else
-            {
-                if ("key" == repeat_func)
-                {
-                    printf("Press a key to play again. q or C-c to quit.");
-                    char ch = getchar();
-                    if ('q' == ch || 'Q' == ch)
-                    {
-                        break;
-                    }
-                }
-                else if ("delay" == repeat_func)
-                {
-                    for (size_t j = 0; ros::ok() && j < repeat_times; j++)
-                    {
-                        ros::spinOnce();
-                        rate.sleep();
-                    }
-                }
-                else if ("always" != repeat_func)
-                {
-                    break;  // don't repeat
-                }
-                // read again
-                i = -1;  // i++ after continue
-                continue;
-            }
-        }
-
-        // read pcd
-        cloud->header.frame_id = "test_pcd_" + pcd_name + "_" + id.str();
-
-        cloud->header.stamp = pcl_conversions::toPCL(ros::Time::now());
-        pub.publish(cloud);
-        ros::spinOnce();
-        rate.sleep();
-    }
-
-    printf("Bye!\n");
-    return 0;
+    return true;
 }
 
 void Usage()
