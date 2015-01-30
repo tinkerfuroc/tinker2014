@@ -2,7 +2,7 @@
 // File         : writing_pcds.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-01-30, 00:30:44
+// Last modified: 2015-01-30, 17:59:19
 // Description  : show ros-style pointcloud.
 // 
 
@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     if (argc <= 1)
     {
         Usage();
-        return -1;
+        return 2;
     }
     for (int i = 1; i < argc; i++)  // 检查命令行参数
     {
@@ -50,7 +50,7 @@ int main(int argc, char** argv)
                 if (argv[i][j] == '.' || argv[i][j] == '/')
                 {
                     printf("Error: Invalid dir.");
-                    return -1;
+                    return 2;
                 }
             }
             // store name
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
             if (i == argc)
             {
                 printf("Error: please input rate as a parameter.\n");
-                return -1;
+                return 2;
             }
             else
             {

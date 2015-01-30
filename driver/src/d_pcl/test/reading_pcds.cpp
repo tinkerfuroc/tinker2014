@@ -2,7 +2,7 @@
 // File         : reading_pcd.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-01-30, 01:12:48
+// Last modified: 2015-01-30, 17:58:48
 // Description  : read pcd from file
 // 
 
@@ -32,7 +32,7 @@ int main(int argc, char** argv)
     if (argc <= 1)
     {
         Usage();
-        return -1;
+        return 2;
     }
     for (int i = 1; i < argc; i++)  // 检查命令行参数
     {
@@ -53,7 +53,7 @@ int main(int argc, char** argv)
             if (i == argc)
             {
                 printf("Error: please input rate as a parameter.\n");
-                return -1;
+                return 2;
             }
             else
             {
@@ -67,7 +67,7 @@ int main(int argc, char** argv)
             {
                 printf("Error: please select repeat function: ");
                 printf("always,delay,key,not\n");
-                return -1;
+                return 2;
             }
             else
             {
@@ -79,7 +79,7 @@ int main(int argc, char** argv)
                     {
                         printf("Error: please input repeat times,");
                         printf("for example: -f delay 10\n");
-                        return -1;
+                        return 2;
                     }
                     else
                     {
@@ -92,7 +92,7 @@ int main(int argc, char** argv)
         {
             printf("Error: unknown parameter.\n");
             Usage();
-            return -1;
+            return 2;
         }
     }
 

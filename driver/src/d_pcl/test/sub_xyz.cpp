@@ -2,7 +2,7 @@
 // File         : sub_xyz.cpp
 // Author       : bss
 // Creation Date: 2014-07-12
-// Last modified: 2015-01-29, 23:26:45
+// Last modified: 2015-01-30, 17:58:16
 // Description  : convert ros-style pointcloud to pcl-style.
 // 
 
@@ -26,6 +26,7 @@ int main(int argc, char** argv)
         if (!ros::ok())
         {
             printf("Terminated by C-c.\n");
+            delete cc_;
             return -1;
         }
     }
