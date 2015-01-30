@@ -166,7 +166,7 @@ float histo::histo_dist_sq(histo* a)
   {
     sum_a += sqrt(this->data[i] * a->data[i]);
   }
-  return 1.0 - sum_a / (float)n;
+  return 1.0 - sum_a;
 }
 
 histo* histo::calc_histogram(PointCloudT::Ptr& cloud, float max_y, float min_y)

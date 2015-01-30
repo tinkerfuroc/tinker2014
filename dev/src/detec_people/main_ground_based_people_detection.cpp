@@ -61,6 +61,8 @@ pcl::visualization::PCLVisualizer viewer("PCL Viewer");
 // Mutex: //
 boost::mutex cloud_mutex;
 
+double threshold = 0.2;
+
 enum { COLS = 640, ROWS = 480 };
 
 int print_help()
@@ -182,6 +184,9 @@ int main (int argc, char** argv)
   PointCloudT::Ptr cloud_people (new PointCloudT);
   histo* sample = new histo(3 * 110);
   int pic_count = 0;
+  float hist_dist_min = 0;
+  std::vector<pcl::people::PersonCluster<PointT> >::iterator it_min;
+  int k_min = 0;
 
   // Main loop:
   while (!viewer.wasStopped())
@@ -203,30 +208,52 @@ int main (int argc, char** argv)
       pcl::visualization::PointCloudColorHandlerRGBField<PointT> rgb(cloud);
       viewer.addPointCloud<PointT> (cloud, rgb, "input_cloud");
       unsigned int k = 0;
+      hist_dist_min = 2.0;
       for(std::vector<pcl::people::PersonCluster<PointT> >::iterator it = clusters.begin(); it != clusters.end(); ++it)
       {
         if(it->getPersonConfidence() > min_confidence)             // draw only people with confidence above a threshold
         {
           // draw theoretical person bounding box in the PCL viewer:
-          it->drawTBoundingBox(viewer, k);
-          k++;
+          //it->drawTBoundingBox(viewer, k);
+          //k++;
           pcl::copyPointCloud(*cloud, it->getIndices(), *cloud_people);
           if (pic_count <= 10)
           {
             histo* tmp = sample->calc_histogram(cloud_people, it->getMax()(1), it->getMin()(1));
             *sample = *sample + *tmp;
+            pic_count++;
           }
           else if (pic_count == 11)
           {
             sample->normalize();
-            histo* tmp = sample->calc_histogram(cloud_people, it->getMax()(1), it->getMin()(1));
-            float dist = sample->histo_dist_sq(sample, tmp);
-            std::cout << "the histogram distance is " << dist << std::endl;
+            pic_count++;
           }
+          else
+          {
+            histo* tmp = sample->calc_histogram(cloud_people, it->getMax()(1), it->getMin()(1));
+            float dist = sample->histo_dist_sq(tmp);
+            std::cout << "the histogram distance is " << dist << std::endl;
+            if (dist < hist_dist_min)
+            {
+              hist_dist_min = dist;
+              it_min = it;
+              k_min = k;
+            }
+          }
+          k++;
         }
       }
       std::cout << k << " people found" << std::endl;
       viewer.spinOnce();
+      if (hist_dist_min < threshold)
+      {
+        it_min->drawTBoundingBox(viewer, k_min);
+        std::cout << "the best coff is " << hist_dist_min << std::endl;
+      }
+      else
+      {
+        std::cout << "can't find that person! and the best coff is " << hist_dist_min << std::endl;
+      }
 
       // Display average framerate:
       if (++count == 30)
