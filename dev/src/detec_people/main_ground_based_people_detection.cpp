@@ -44,18 +44,16 @@
  * Tracking people within groups with RGB-D data,
  * In Proceedings of the International Conference on Intelligent Robots and Systems (IROS) 2012, Vilamoura (Portugal), 2012.
  */
-  
+
 #include <pcl/console/parse.h>
 #include <pcl/point_types.h>
-#include <pcl/visualization/pcl_visualizer.h>    
+#include <pcl/visualization/pcl_visualizer.h>
 #include <pcl/io/openni_grabber.h>
 #include <pcl/sample_consensus/sac_model_plane.h>
 #include <pcl/people/ground_based_people_detection_app.h>
 #include <pcl/common/time.h>
 #include <histo.h>
 
-typedef pcl::PointXYZRGBA PointT;
-typedef pcl::PointCloud<PointT> PointCloudT;
 
 // PCL viewer //
 pcl::visualization::PCLVisualizer viewer("PCL Viewer");
@@ -92,7 +90,7 @@ struct callback_args{
   PointCloudT::Ptr clicked_points_3d;
   pcl::visualization::PCLVisualizer::Ptr viewerPtr;
 };
-  
+
 void
 pp_callback (const pcl::visualization::PointPickingEvent& event, void* args)
 {
@@ -132,19 +130,6 @@ int main (int argc, char** argv)
 
   // Read Kinect live stream:
   PointCloudT::Ptr cloud (new PointCloudT);
-  bool new_cloud_available_flag = false;
-  pcl::Grabber* interface = new pcl::OpenNIGrabber();
-  boost::function<void (const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr&)> f =
-      boost::bind (&cloud_cb_, _1, cloud, &new_cloud_available_flag);
-  interface->registerCallback (f);
-  interface->start ();
-
-  // Wait for the first frame:
-  while(!new_cloud_available_flag) 
-    boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-  new_cloud_available_flag = false;
-
-  cloud_mutex.lock ();    // for not overwriting the point cloud
 
   // Display pointcloud:
   pcl::visualization::PointCloudColorHandlerRGBField<PointT> rgb(cloud);
@@ -162,8 +147,8 @@ int main (int argc, char** argv)
   // Spin until 'Q' is pressed:
   viewer.spin();
   std::cout << "done." << std::endl;
-  
-  cloud_mutex.unlock ();    
+
+  cloud_mutex.unlock ();
 
   // Ground plane estimation:
   Eigen::VectorXf ground_coeffs;
@@ -179,7 +164,7 @@ int main (int argc, char** argv)
   pcl::visualization::PCLVisualizer viewer("PCL Viewer");          // viewer initialization
   viewer.setCameraPosition(0,0,-2,0,-1,0,0);
 
-  // Create classifier for people detection:  
+  // Create classifier for people detection:
   pcl::people::PersonClassifier<pcl::RGB> person_classifier;
   person_classifier.loadSVMFromFile(svm_filename);   // load trained SVM
 
@@ -194,13 +179,15 @@ int main (int argc, char** argv)
   // For timing:
   static unsigned count = 0;
   static double last = pcl::getTime ();
+  PointCloudT::Ptr cloud_people (new PointCloudT);
+  histo* sample = new histo(3 * 110);
+  int pic_count = 0;
 
   // Main loop:
   while (!viewer.wasStopped())
   {
-    if (new_cloud_available_flag && cloud_mutex.try_lock ())    // if a new cloud is available
+    if (true)    // if a new cloud is available
     {
-      new_cloud_available_flag = false;
 
       // Perform people detection on the new cloud:
       std::vector<pcl::people::PersonCluster<PointT> > clusters;   // vector containing persons clusters
@@ -223,6 +210,19 @@ int main (int argc, char** argv)
           // draw theoretical person bounding box in the PCL viewer:
           it->drawTBoundingBox(viewer, k);
           k++;
+          pcl::copyPointCloud(*cloud, it->getIndices(), *cloud_people);
+          if (pic_count <= 10)
+          {
+            histo* tmp = sample->calc_histogram(cloud_people, it->getMax()(1), it->getMin()(1));
+            *sample = *sample + *tmp;
+          }
+          else if (pic_count == 11)
+          {
+            sample->normalize();
+            histo* tmp = sample->calc_histogram(cloud_people, it->getMax()(1), it->getMin()(1));
+            float dist = sample->histo_dist_sq(sample, tmp);
+            std::cout << "the histogram distance is " << dist << std::endl;
+          }
         }
       }
       std::cout << k << " people found" << std::endl;
@@ -236,7 +236,6 @@ int main (int argc, char** argv)
         count = 0;
         last = now;
       }
-      cloud_mutex.unlock ();
     }
   }
 
