@@ -1,0 +1,18 @@
+<!-- Project      : tinker2014 -->
+<!-- File         : write_pcds.launch -->
+<!-- created by bss at 2015-01-30 -->
+<!-- Last modified: 2015-01-30, 17:54:59
+    !-->
+
+<launch>
+
+  <node pkg="openni2_camera" type="openni2_camera_node"
+      name="openni2_camera_node" />
+
+  <include file="$(find d_pcl)/launch/primesense_to_pcl.launch" />
+
+  <node pkg="d_pcl" type="test_writing_pcds" name="test_writing_pcds"
+      args="test1" />
+
+</launch>
+
