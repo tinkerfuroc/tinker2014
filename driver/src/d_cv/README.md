@@ -9,11 +9,18 @@ Description: 将ros的Image转换为OpenCV支持的格式
 
 ###使用方法
 
-测试primesence摄像头:
+测试primesense摄像头:
 
 
 ```bash
 rosrun d_cv test_reading_image
+```
+
+保存一张primesense拍摄的照片:
+
+
+```bash
+rosrun d_cv test_writing_image xx   # 保存为share/d_cv/xx.png
 ```
 
 可能需要启动的package:
@@ -26,6 +33,7 @@ rosrun openni2_camera openni2_camera_node
 
 ######nodes
 - test_reading_image
+- test_writing_image
 
 ######订阅的topics
 - /rgb/image  ([sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html))

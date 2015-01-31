@@ -1,7 +1,7 @@
-// project:     followme
-// file:        test_reading_image.cpp
+// project:     d_cv@tinker
+// file:        reading_image.cpp
 // created by bss at 2013-12-21
-// Last modified: 2015-01-27, 23:35:02
+// Last modified: 2015-02-01, 01:00:33
 // description: 
 
 #include "ros/ros.h"
@@ -38,7 +38,7 @@ int main(int argc, char** argv)
     {
         if (ic.ready == true)
         {
-            cv::imshow("followme image window, test", ic.curr_image);
+            cv::imshow("image window, test", ic.curr_image);
         }
         ros::spinOnce();
         cv::waitKey(3);

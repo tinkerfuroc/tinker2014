@@ -1,0 +1,13 @@
+<!-- Project      : tinker2014 -->
+<!-- File         : read_pcds.launch -->
+<!-- created by bss at 2015-01-30 -->
+<!-- Last modified: 2015-01-30, 17:56:15
+    !-->
+
+<launch>
+
+  <node pkg="d_pcl" type="test_reading_pcds" name="test_reading_pcds"
+      args="test1" />
+
+</launch>
+
