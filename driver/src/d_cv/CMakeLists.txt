@@ -108,7 +108,9 @@ add_library(reading_image
 
 ## Declare a cpp executable
 # add_executable(reading_image_node src/reading_image_node.cpp)
-add_executable(test_reading_image test/test_reading_image.cpp)
+add_executable(test_reading_image test/reading_image.cpp)
+
+add_executable(test_writing_image test/writing_image.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
@@ -119,6 +121,11 @@ add_executable(test_reading_image test/test_reading_image.cpp)
 #   ${catkin_LIBRARIES}
 # )
 target_link_libraries(test_reading_image
+    reading_image
+    ${catkin_LIBRARIES}
+)
+
+target_link_libraries(test_writing_image
     reading_image
     ${catkin_LIBRARIES}
 )

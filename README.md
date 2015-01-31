@@ -41,7 +41,6 @@ downloaded中的package应尽量保持原样。
 share文件夹中放资源文件(如*.jpg)，
 ui文件夹中放启动脚本等等非ROS的程序。
 
-~~缺点是编译时需要cd到各个workspace下执行catkin_make。~~
 目前最上层的编译管理使用Makefile，
 但单独编译某个workspace时，
 不能自动分析不同workspace之间的依赖来决定是否编译其他workspace。

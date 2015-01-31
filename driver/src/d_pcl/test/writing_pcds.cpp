@@ -2,7 +2,7 @@
 // File         : writing_pcds.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-01-30, 00:30:44
+// Last modified: 2015-02-01, 00:27:22
 // Description  : show ros-style pointcloud.
 // 
 
@@ -17,6 +17,11 @@
 void Usage();
 // callback, when recv pointcloud
 void getCloudCb(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr& msg);
+// analysis args
+bool AnalysisOpts(int argc, char** argv,
+        std::string& pcd_name, int& rate_Hz);
+// check dir
+bool IsValidDir(char* dir);
 
 int count = 0;
 // pcd file path
@@ -31,48 +36,19 @@ int main(int argc, char** argv)
 
     int rate_Hz = 5;
 
-    if (argc <= 1)
+    if (!AnalysisOpts(argc, argv, pcd_name, rate_Hz))
     {
+        return 2;
+    }
+    if ("" == pcd_name)
+    {
+        printf("Error: must input a dir name.\n");
         Usage();
-        return -1;
+        return 2;
     }
-    for (int i = 1; i < argc; i++)  // 检查命令行参数
-    {
-        if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0)
-        {
-            Usage();
-        }
-        else if (argv[i][0] != '-')
-        {
-            // safety check
-            for (size_t j = 0; j < strlen(argv[i]); j++)
-            {
-                if (argv[i][j] == '.' || argv[i][j] == '/')
-                {
-                    printf("Error: Invalid dir.");
-                    return -1;
-                }
-            }
-            // store name
-            pcd_name = argv[i];
-            pcd_path = package_path + "/../../../share/d_pcl/"
-                    + argv[i];
-        }
-        else if (strcmp(argv[i], "-r") == 0 ||
-                strcmp(argv[i], "--rate") == 0)
-        {
-            ++i;
-            if (i == argc)
-            {
-                printf("Error: please input rate as a parameter.\n");
-                return -1;
-            }
-            else
-            {
-                rate_Hz = atoi(argv[i]);
-            }
-        }
-    }
+    pcd_path = package_path + "/../../../share/d_pcl/"
+            + pcd_name;
+
 
     // if dir exists
     std::string cmd;
@@ -117,6 +93,75 @@ int main(int argc, char** argv)
         rate.sleep();
         ros::spinOnce();
     }
+}
+
+bool AnalysisOpts(int argc, char** argv,
+        std::string& pcd_name, int& rate_Hz)
+{
+    if (argc <= 1)
+    {
+        Usage();
+        return false;
+    }
+    for (int i = 1; i < argc; i++)  // 检查命令行参数
+    {
+        if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0)
+        {
+            Usage();
+        }
+        else if (argv[i][0] != '-')
+        {
+            if (IsValidDir(argv[i]))
+            {
+                // store name
+                pcd_name = argv[i];
+            }
+        }
+        else if (strcmp(argv[i], "-d") == 0 ||
+                strcmp(argv[i], "--dir") == 0)
+        {
+            ++i;
+            if (i == argc)
+            {
+                printf("Error: please input dir name after -d/--dir.\n");
+                return false;
+            }
+            if (!IsValidDir(argv[i]))
+            {
+                printf("Invalid dir \"%s\".", argv[i]);
+                return false;
+            }
+            // store name
+            pcd_name = argv[i];
+            
+        }
+        else if (strcmp(argv[i], "-r") == 0 ||
+                strcmp(argv[i], "--rate") == 0)
+        {
+            ++i;
+            if (i == argc)
+            {
+                printf("Error: please input rate as a parameter.\n");
+                return false;
+            }
+            rate_Hz = atoi(argv[i]);
+        }
+    }
+    return true;
+}
+
+bool IsValidDir(char* dir)
+{
+    int len = strlen(dir);
+    // safety check
+    for (size_t j = 0; j < len; j++)
+    {
+        if (dir[j] == '.' || dir[j] == '/')
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 void Usage()
