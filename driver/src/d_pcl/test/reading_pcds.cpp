@@ -2,7 +2,7 @@
 // File         : reading_pcd.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-01-30, 18:48:52
+// Last modified: 2015-02-01, 00:33:22
 // Description  : read pcd from file
 // 
 
@@ -165,6 +165,17 @@ bool AnalysisOpts(int argc, char** argv,
         {
             pcd_name = argv[i];
         }
+        else if (strcmp(argv[i], "-d") == 0 ||
+                strcmp(argv[i], "--dir") == 0)
+        {
+            ++i;
+            if (i == argc)
+            {
+                printf("Error: please input dir name after -d/--dir.\n");
+                return false;
+            }
+            pcd_name = argv[i];
+        }
         else if (strcmp(argv[i], "-r") == 0 ||
                 strcmp(argv[i], "--rate") == 0)
         {
@@ -174,10 +185,7 @@ bool AnalysisOpts(int argc, char** argv,
                 printf("Error: please input rate as a parameter.\n");
                 return false;
             }
-            else
-            {
-                rate_Hz = atoi(argv[i]);
-            }
+            rate_Hz = atoi(argv[i]);
         }
         else if (strcmp(argv[i], "-f") == 0)
         {
@@ -188,22 +196,19 @@ bool AnalysisOpts(int argc, char** argv,
                 printf("always,delay,key,not\n");
                 return false;
             }
-            else
+            repeat_func = argv[i];
+            if ("delay" == repeat_func)
             {
-                repeat_func = argv[i];
-                if ("delay" == repeat_func)
+                ++i;
+                if (i == argc)
                 {
-                    ++i;
-                    if (i == argc)
-                    {
-                        printf("Error: please input repeat times,");
-                        printf("for example: -f delay 10\n");
-                        return false;
-                    }
-                    else
-                    {
-                        repeat_times = atoi(argv[i]);
-                    }
+                    printf("Error: please input repeat times,");
+                    printf("for example: -f delay 10\n");
+                    return false;
+                }
+                else
+                {
+                    repeat_times = atoi(argv[i]);
                 }
             }
         }

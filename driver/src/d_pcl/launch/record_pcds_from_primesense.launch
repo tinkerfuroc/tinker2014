@@ -1,7 +1,7 @@
 <!-- Project      : tinker2014 -->
-<!-- File         : write_pcds_from_primesense.launch -->
+<!-- File         : record_pcds_from_primesense.launch -->
 <!-- created by bss at 2015-01-30 -->
-<!-- Last modified: 2015-01-31, 00:33:33
+<!-- Last modified: 2015-02-01, 00:07:18
     !-->
 
 <launch>
