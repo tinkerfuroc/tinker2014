@@ -138,7 +138,7 @@ int main (int argc, char** argv)
   std::stringstream id;
   id << i;
   std::string pcd_path = "../../../../share/d_pcl/";
-  std::string pcd_folder = "test";
+  std::string pcd_folder = "1";
   std::string file_path = pcd_path + pcd_folder + "/pcd" + id.str() + ".pcd";
   if (pcl::io::loadPCDFile<pcl::PointXYZRGB>(file_path.c_str(), *cloud) == -1 )
   {
@@ -209,7 +209,8 @@ int main (int argc, char** argv)
   while (!viewer.wasStopped())
   {
     i++;
-    id << i;
+    std::stringstream id;
+    id  << i;
     std::string file_path = pcd_path + pcd_folder + "/pcd" + id.str() + ".pcd";
     std::cout << "loading " + file_path << std::endl;
     if (pcl::io::loadPCDFile<pcl::PointXYZRGB>(file_path.c_str(), *cloud) != -1)    // if a new cloud is available
@@ -233,7 +234,7 @@ int main (int argc, char** argv)
       for(std::vector<pcl::people::PersonCluster<PointT> >::iterator it = clusters.begin(); it != clusters.end(); ++it)
       {
         if(it->getPersonConfidence() > min_confidence)             // draw only people with confidence above a threshold
-        {
+        { 
           // draw theoretical person bounding box in the PCL viewer:
           //it->drawTBoundingBox(viewer, k);
           //k++;
@@ -265,7 +266,9 @@ int main (int argc, char** argv)
         }
       }
       std::cout << k << " people found" << std::endl;
+      std::cout << "spining" << std::endl;
       viewer.spinOnce();
+      std::cout << "spining done" << std::endl;
       if (hist_dist_min < threshold)
       {
         it_min->drawTBoundingBox(viewer, k_min);
