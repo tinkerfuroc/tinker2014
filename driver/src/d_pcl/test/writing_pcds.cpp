@@ -2,7 +2,7 @@
 // File         : writing_pcds.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-02-01, 00:27:22
+// Last modified: 2015-02-01, 14:37:50
 // Description  : show ros-style pointcloud.
 // 
 
@@ -26,6 +26,8 @@ bool IsValidDir(char* dir);
 int count = 0;
 // pcd file path
 std::string pcd_path = "";
+// ascii or binary
+bool saveAsASCII = false;
 
 int main(int argc, char** argv)
 {
@@ -98,6 +100,7 @@ int main(int argc, char** argv)
 bool AnalysisOpts(int argc, char** argv,
         std::string& pcd_name, int& rate_Hz)
 {
+    bool IsDirSet = false;
     if (argc <= 1)
     {
         Usage();
@@ -111,7 +114,7 @@ bool AnalysisOpts(int argc, char** argv,
         }
         else if (argv[i][0] != '-')
         {
-            if (IsValidDir(argv[i]))
+            if (!IsDirSet && IsValidDir(argv[i]))
             {
                 // store name
                 pcd_name = argv[i];
@@ -133,7 +136,7 @@ bool AnalysisOpts(int argc, char** argv,
             }
             // store name
             pcd_name = argv[i];
-            
+            IsDirSet = true;
         }
         else if (strcmp(argv[i], "-r") == 0 ||
                 strcmp(argv[i], "--rate") == 0)
@@ -145,6 +148,10 @@ bool AnalysisOpts(int argc, char** argv,
                 return false;
             }
             rate_Hz = atoi(argv[i]);
+        }
+        else if (strcmp(argv[i], "--ascii") == 0)
+        {
+            saveAsASCII = true;
         }
     }
     return true;
@@ -175,6 +182,7 @@ void Usage()
     printf("DEST: output dir name(put it in ui/d_pcl).\n");
     printf("-h,--help: print help message.\n");
     printf("-r,--rate: sending rate, in Hz.\n");
+    printf("--ascii: save pcd in ascii format, buggy and slow.\n");
     printf("\n");
     printf("example:\n");
     printf("rosrun d_pcl test_writing_pcds tests\n");
@@ -182,6 +190,7 @@ void Usage()
 
 void getCloudCb(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr& msg)
 {
+    printf("Get %d pcl.\n", count);
     pcl::PointCloud<pcl::PointXYZRGB> cloud;
 
     cloud.width = msg->width;    // looks bad
@@ -197,6 +206,13 @@ void getCloudCb(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr& msg)
     // save the file
     std::stringstream ss;
     ss << pcd_path << "/pcd" << count++ << ".pcd";
-    pcl::io::savePCDFileASCII(ss.str().c_str(), cloud);
+    if (saveAsASCII)
+    {
+        pcl::io::savePCDFileASCII(ss.str().c_str(), cloud);
+    }
+    else
+    {
+        pcl::io::savePCDFileBinary(ss.str().c_str(), cloud);
+    }
 }
 
