@@ -4,7 +4,7 @@
 # Module        : tinker
 # Author        : bss
 # Creation date : 2015-02-01
-#  Last modified: 2015-02-02, 00:41:09
+#  Last modified: 2015-02-02, 00:58:19
 # Description   : Startup script for tinker, main body.
 #
 
@@ -173,8 +173,6 @@ def HandleCase(lines, theCase, filename, linenumber):
     nesting_level = 0
     linenumberOfNesting = 0
     found = False
-    print(theCase)
-    print(lines)
     for originLine in lines:
         count += 1
         line = originLine.strip()
@@ -194,7 +192,6 @@ def HandleCase(lines, theCase, filename, linenumber):
         if line.startswith('case'):
             nesting_level += 1
             case = RemoveQuotes(line[len('case'):].strip())
-            print(case)
             if (nesting_level) == 1 and (case == theCase):
                 found = True
                 linenumberOfNesting = count
