@@ -2,7 +2,7 @@
 // File         : reading_pcd.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-02-01, 00:33:22
+// Last modified: 2015-02-01, 14:46:06
 // Description  : read pcd from file
 // 
 
@@ -187,12 +187,13 @@ bool AnalysisOpts(int argc, char** argv,
             }
             rate_Hz = atoi(argv[i]);
         }
-        else if (strcmp(argv[i], "-f") == 0)
+        else if (strcmp(argv[i], "-l") == 0 ||
+                strcmp(argv[i], "--logic") == 0)
         {
             ++i;
             if (i == argc)
             {
-                printf("Error: please select repeat function: ");
+                printf("Error: please select repeat logic: ");
                 printf("always,delay,key,not\n");
                 return false;
             }
@@ -203,7 +204,7 @@ bool AnalysisOpts(int argc, char** argv,
                 if (i == argc)
                 {
                     printf("Error: please input repeat times,");
-                    printf("for example: -f delay 10\n");
+                    printf("for example: -l delay 10\n");
                     return false;
                 }
                 else
@@ -233,7 +234,7 @@ void Usage()
     printf("SOURCE: input dir name(put it in ui/d_pcl).\n");
     printf("-h,--help: print help message.\n");
     printf("-r,--rate: sending rate, in Hz.\n");
-    printf("-f: how to repeat.\n");
+    printf("-l,--logic: how to repeat.\n");
     printf("  always:always repeat;\n");
     printf("  delay times:延迟times帧再重复\n");
     printf("  key:wait for key;\n");
