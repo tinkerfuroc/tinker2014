@@ -5,6 +5,42 @@ tinker2014
 
 ------
 
+#目前有的包
+
+##driver工作空间
+
+####d_say
+发出声音
+
+####d_cv
+将primesense采集的图像转换为opencv格式
+
+####d_pcl
+pcl相关驱动
+
+##logic工作空间
+
+####l_sphinx_wrapper
+使用pocketsphinx进行语音识别相关
+
+##decision工作空间
+
+####answer_questions
+回答问题
+
+##其他
+
+####ui/start
+启动脚本，
+启动方法是
+
+```bash
+cd $TINKER_WORKSPACE
+./start.py
+```
+
+------
+
 #重构设想
 
 ##文件结构
