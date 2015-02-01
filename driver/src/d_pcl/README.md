@@ -12,7 +12,7 @@ Description: PCL驱动
 
 ```bash
 roslaunch d_pcl primesense_to_pcl.launch            # 启动转换程序
-roslaunch d_pcl record_pcds_from_primesense.launch  # 从primesense录制一批pcd文件
+roslaunch d_pcl record_pcds_from_primesense.launch dir:=test1  # 从primesense录制一批pcd文件
 ```
 
 ```bash
