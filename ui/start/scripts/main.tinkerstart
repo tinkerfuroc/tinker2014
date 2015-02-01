@@ -1,0 +1,21 @@
+# -*- coding: utf-8 -*-
+print "main.tinkerstart for tinker"
+
+speak "hello, please select a task"
+switch
+    case "answer questions"
+        speak "start task answer questions"
+        exec "answer_question.txt"
+        break
+    case "record p c d"
+        speak "start task record pcd"
+        exec "record_pcd.txt"
+        break
+    case "cancel"
+        break
+end
+
+gets
+speak "goodbye"
+system echo "The End"
+

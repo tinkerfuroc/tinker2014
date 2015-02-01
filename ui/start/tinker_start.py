@@ -4,7 +4,7 @@
 # Module        : tinker
 # Author        : bss
 # Creation date : 2015-02-01
-#  Last modified: 2015-02-01, 21:16:12
+#  Last modified: 2015-02-01, 22:50:35
 # Description   : Startup script for tinker, main body.
 #
 
@@ -13,19 +13,35 @@ import os
 import rospy
 import ConfigParser
 from std_msgs.msg import String
+from d_say.srv import *
 
+rate = None
 say_pub = rospy.Publisher('/say/sentence', String, queue_size=1)
 cwd = os.path.split(os.path.realpath(__file__))[0];
 config = ConfigParser.SafeConfigParser(
         {'xdotool_sleep_time': '4'}
 )
 
-def Speak(text):
-    print(text)
-    say_pub.publish(str(text))
+def d_say_IsPlaying():
+    rospy.wait_for_service('/say/IsPlaying')
+    try:
+        func_IsPlaying = rospy.ServiceProxy('/say/IsPlaying', IsPlaying)
+        resp = func_IsPlaying()
+        return resp.playing
+    except rospy.ServiceException, e:
+        print('fail: %s'%e)
+        return False
 
-def Wait():
-    rate = rospy.Rate(10)
+def Speak(text):
+    print('speak: "' + text + '"')
+    if d_say_IsPlaying():
+        print('waiting for d_say...')
+        while (not rospy.is_shutdown()) and d_say_IsPlaying():
+            rate.sleep()
+    say_pub.publish(str(text))
+    rate.sleep()
+
+def Wait():     # wait for C-c
     while not rospy.is_shutdown():
         rate.sleep()
 
@@ -34,19 +50,39 @@ def StartNewTab(cmd):
     os.system('xdotool key ctrl+shift+t ; sleep ' + str(t) + ' ; '
             + 'xdotool type "' + cmd + '" ; xdotool key "Return"')
 
-def SwitchBack():
+def SwitchBack():   # switch back to this tab
     os.system('xdotool key alt+1 ; sleep 1')
+
+def Run(filename):      # run tinkerstart script
+    print('run ' + filename + '.tinkerstart')
+    filepath = cwd + '/scripts/' + filename + '.tinkerstart'
+    f = open(filepath, 'r')
+    for line in f.readlines():
+        line = line.strip()
+        if (line.startswith('#') or line == ''):
+            continue
+        if line.startswith('print'):
+            value = line[len('print'):].strip()
+            print('print: ' + value)
+        if line.startswith('speak'):
+            value = line[len('speak'):].strip()
+            if value.startswith('"') and value.startswith('"'):
+                value = value[1:-1]
+                Speak(value)
+        #print(line)
 
 def main(argv):
     print(cwd)
     config.read(cwd + '/settings.ini')
 
-    StartNewTab('roscore')
+    #StartNewTab('roscore')
     rospy.init_node('tinker_start', anonymous=True)
-    StartNewTab('rosrun d_say say_node.py')
+    #StartNewTab('rosrun d_say say_node.py')
 
     SwitchBack()
-    Speak('Hello world')
+    global rate
+    rate = rospy.Rate(10)
+    Run('main')
     print('Press C-c to exit...')
     Wait()
     print('Bye!')
