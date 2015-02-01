@@ -11,7 +11,8 @@ Description: PCL驱动
 ###使用方法
 
 ```bash
-roslaunch d_pcl primesense_to_pcl.launch    # 启动转换程序
+roslaunch d_pcl primesense_to_pcl.launch            # 启动转换程序
+roslaunch d_pcl record_pcds_from_primesense.launch dir:=test1  # 从primesense录制一批pcd文件
 ```
 
 ```bash
@@ -21,6 +22,25 @@ rosrun d_pcl test_sub_xyzrgb      # 命令行显示xyzrgb
 rosrun d_pcl test_reading_pcd xx  # 读取pcd文件,从share/d_pcl下查找
 rosrun d_pcl test_reading_pcds xx # 从share/d_pcl/xx/下读取pcd文件
 rosrun d_pcl test_writing_pcds xx # 将pcd文件写入share/d_pcl/xx/下
+```
+
+######primesense_to_pcl.launch
+从primesense获取信息，
+发布点云到/pcl/points2和/pcl/points2_xyz
+
+需要先启动openni2_camera:
+```bash
+rosrun openni2_camera openni2_camera_node    # 不是用launch
+```
+
+######record_pcds_from_primesense.launch
+从primesense获取信息，转换为点云，
+写入到share/d_pcl/下的xx文件夹中
+
+需要先启动openni2_camera和primesense_to_pcl.launch:
+```bash
+rosrun openni2_camera openni2_camera_node
+roslaunch d_pcl primesense_to_pcl.launch
 ```
 
 ######test_show_xyzrgb
