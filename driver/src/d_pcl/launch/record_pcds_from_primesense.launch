@@ -1,7 +1,7 @@
 <!-- Project      : tinker2014 -->
 <!-- File         : record_pcds_from_primesense.launch -->
 <!-- created by bss at 2015-01-30 -->
-<!-- Last modified: 2015-02-01, 00:07:18
+<!-- Last modified: 2015-02-01, 15:03:39
     !-->
 
 <launch>
@@ -14,8 +14,8 @@
   <include file="$(find d_pcl)/launch/primesense_to_pcl.launch" />
 
   <node pkg="d_pcl" type="test_writing_pcds" name="test_writing_pcds"
-      output="screen">
-    <param name="" value="$(arg dir)" />
+      args="--dir $(arg dir)" output="screen">
+    <param name="dir" value="$(arg dir)" />
   </node>
 
 </launch>

@@ -2,7 +2,7 @@
 // File         : writing_pcds.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-02-01, 14:37:50
+// Last modified: 2015-02-01, 15:04:44
 // Description  : show ros-style pointcloud.
 // 
 
@@ -38,6 +38,7 @@ int main(int argc, char** argv)
 
     int rate_Hz = 5;
 
+    // get opts
     if (!AnalysisOpts(argc, argv, pcd_name, rate_Hz))
     {
         return 2;
@@ -55,7 +56,7 @@ int main(int argc, char** argv)
     // if dir exists
     std::string cmd;
     cmd = "[ -d \"" + pcd_path + "\" ]";
-    printf("check: ");
+    printf("check: %s\n", pcd_name.c_str());
     bool dir_not_exist = system(cmd.c_str());
     fflush(stdout);
     if (dir_not_exist)    // not exist
@@ -86,6 +87,7 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "test_writing_pcds");
     ros::NodeHandle n;
     ros::Rate rate(rate_Hz);
+    // subscribe
     ros::Subscriber sub = n.subscribe<pcl::PointCloud<pcl::PointXYZRGB> >(
             "/pcl/points2", 1, getCloudCb);
 
@@ -101,6 +103,7 @@ bool AnalysisOpts(int argc, char** argv,
         std::string& pcd_name, int& rate_Hz)
 {
     bool IsDirSet = false;
+
     if (argc <= 1)
     {
         Usage();
@@ -124,6 +127,10 @@ bool AnalysisOpts(int argc, char** argv,
                 strcmp(argv[i], "--dir") == 0)
         {
             ++i;
+            if (IsDirSet)
+            {
+                printf("Ignore -d/--dir because dir param has been set.\n");
+            }
             if (i == argc)
             {
                 printf("Error: please input dir name after -d/--dir.\n");
