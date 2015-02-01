@@ -116,7 +116,7 @@ int main (int argc, char** argv)
         return print_help();
 
   // Algorithm parameters:
-  std::string svm_filename = "../../people/data/trainedLinearSVMForPeopleDetectionWithHOG.yaml";
+  std::string svm_filename = "../trainedLinearSVMForPeopleDetectionWithHOG.yaml";
   float min_confidence = -1.5;
   float min_height = 1.3;
   float max_height = 2.3;
@@ -132,6 +132,23 @@ int main (int argc, char** argv)
 
   // Read Kinect live stream:
   PointCloudT::Ptr cloud (new PointCloudT);
+
+  // Read pcd files from the harddisk:
+  int i = 0;
+  std::stringstream id;
+  id << i;
+  std::string pcd_path = "../../../../share/d_pcl/";
+  std::string pcd_folder = "test";
+  std::string file_path = pcd_path + pcd_folder + "/pcd" + id.str() + ".pcd";
+  if (pcl::io::loadPCDFile<pcl::PointXYZRGB>(file_path.c_str(), *cloud) == -1 )
+  {
+    printf("Error: no valid file in the dir.\n");
+    return 0;
+  }
+  else
+  {
+    printf("load complete!\n");
+  }
 
   // Display pointcloud:
   pcl::visualization::PointCloudColorHandlerRGBField<PointT> rgb(cloud);
@@ -191,9 +208,13 @@ int main (int argc, char** argv)
   // Main loop:
   while (!viewer.wasStopped())
   {
-    if (true)    // if a new cloud is available
+    i++;
+    id << i;
+    std::string file_path = pcd_path + pcd_folder + "/pcd" + id.str() + ".pcd";
+    std::cout << "loading " + file_path << std::endl;
+    if (pcl::io::loadPCDFile<pcl::PointXYZRGB>(file_path.c_str(), *cloud) != -1)    // if a new cloud is available
     {
-
+      std::cout << "load file done!" << std::endl;
       // Perform people detection on the new cloud:
       std::vector<pcl::people::PersonCluster<PointT> > clusters;   // vector containing persons clusters
       people_detector.setInputCloud(cloud);
@@ -262,6 +283,19 @@ int main (int argc, char** argv)
         std::cout << "Average framerate: " << double(count)/double(now - last) << " Hz" <<  std::endl;
         count = 0;
         last = now;
+      }
+    }
+    else
+    {
+      std::cout << "load done! input to quit or load again" << std::endl;
+      char ch = getchar();
+      if ('q' == ch || 'Q' == ch)
+      {
+        break;
+      }
+      else
+      {
+        i = 10;
       }
     }
   }
