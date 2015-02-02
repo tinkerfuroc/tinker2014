@@ -269,7 +269,9 @@ int main (int argc, char** argv)
       std::cout << "spining" << std::endl;
       viewer.spinOnce();
       std::cout << "spining done" << std::endl;
-      if (hist_dist_min < threshold)
+      if (pic_count <= 10)
+        std::cout << "the pic_count is less than 10" << std::endl;
+      else if (hist_dist_min < threshold)
       {
         it_min->drawTBoundingBox(viewer, k_min);
         std::cout << "the best coff is " << hist_dist_min << std::endl;
