@@ -253,7 +253,6 @@ int main (int argc, char** argv)
                 file_path.c_str(), *cloud) != -1)
         // if a new cloud is available
         {
-            std::cout << "load file done!" << std::endl;
             // Perform people detection on the new cloud:
             
             // vector containing persons clusters
@@ -290,6 +289,7 @@ int main (int argc, char** argv)
                         histo* tmp = sample->calc_histogram(cloud_people,
                                 it->getMax()(1), it->getMin()(1));
                         *sample = *sample + *tmp;
+                        it->drawTBoundingBox(viewer, k);
                         pic_count++;
                     }
                     else if (pic_count == 11)
@@ -315,9 +315,6 @@ int main (int argc, char** argv)
                 }
             }
             std::cout << k << " people found" << std::endl;
-            std::cout << "spining" << std::endl;
-            viewer.spinOnce();
-            std::cout << "spining done" << std::endl;
             if (pic_count <= 10)
                 std::cout << "the pic_count is less than 10" << std::endl;
             else if (hist_dist_min < threshold)
@@ -332,6 +329,7 @@ int main (int argc, char** argv)
                         << "can't find that person! and the best coff is "
                         << hist_dist_min << std::endl;
             }
+            viewer.spinOnce();
 
             // Display average framerate:
             if (++count == 30)

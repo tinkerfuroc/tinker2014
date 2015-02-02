@@ -169,6 +169,7 @@ void histo::normalize()
 {
     for (int i = 0; i < this->size; i++)
         this->data[i] = this->data[i] / (float)this->sum;
+    this->sum = 1;
 }
 
 float histo::histo_dist_sq(histo* a)
@@ -204,7 +205,7 @@ histo* histo::calc_histogram(PointCloudT::Ptr& cloud,
             re->data[bin + 2 * N]++;
     }
     re->sum = cloud->points.size();
-    this->normalize();
+    re->normalize();
     return re;
 }
 
