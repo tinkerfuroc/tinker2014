@@ -53,6 +53,8 @@
 #include <pcl/people/ground_based_people_detection_app.h>
 #include <pcl/common/time.h>
 #include <histo.h>
+#include <ros/ros.h>
+#include <ros/package.h>
 
 
 // PCL viewer //
@@ -137,7 +139,8 @@ int main (int argc, char** argv)
   int i = 0;
   std::stringstream id;
   id << i;
-  std::string pcd_path = "../../../../share/d_pcl/";
+  std::string package_path = ros::package::getPath("detect_people");
+  std::string pcd_path = package_path + "/../../../share/d_pcl/";
   std::string pcd_folder = "1";
   std::string file_path = pcd_path + pcd_folder + "/pcd" + id.str() + ".pcd";
   if (pcl::io::loadPCDFile<pcl::PointXYZRGB>(file_path.c_str(), *cloud) == -1 )
@@ -208,6 +211,7 @@ int main (int argc, char** argv)
   // Main loop:
   while (!viewer.wasStopped())
   {
+    printf("while loop\n");
     i++;
     std::stringstream id;
     id  << i;
