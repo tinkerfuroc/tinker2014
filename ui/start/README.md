@@ -8,6 +8,8 @@ cd $TINKER_WORKSPACE
 ./start.py
 ```
 
+可以通过键盘操作或者语音控制程序运行。
+
 如果在远程执行，无法打开新标签页，
 请运行
 
@@ -72,6 +74,9 @@ system echo "The End"
 缩进的意义是美观，
 没有强制要求。
 
+####换行
+解释器通过换行来判断一句代码的结束。
+
 ####print和speak
 使用方法: print/speak+空格+字符串(需要双引号)
 
@@ -100,7 +105,7 @@ switch
     case "situation B"
         print "B"
         break
-    case "cancel"
+    case "cancel mission"
     # cancel是可选的
         break
 end
@@ -114,11 +119,19 @@ Please select: 1.(situation A) 2.(situation B) 3.(cancel)
 ```
 
 如果输入1并按下回车，
+或者对着话筒念“situation A”，
 就会执行
 
 ```
 print "A"
 ```
+
+此处应注意：
+各case后引号内容之间的区分度应比较大，
+否则语音识别容易出错。
+
+如果语音识别不稳定，
+可以通过在settings.ini中设置allow_speech_recognize为0禁止语音控制。
 
 ####gets
 用于输入字符串，
