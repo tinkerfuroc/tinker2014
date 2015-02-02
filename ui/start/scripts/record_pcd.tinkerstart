@@ -1,0 +1,15 @@
+# -*- coding: utf-8 -*-
+# File          : record_pcd.tinkerstart
+# Module        : tinker
+# Author        : bss
+# Creation Date : 2015-02-02
+#  Last modified: 2015-02-02, 00:35:16
+# Description   :
+#
+
+print "record_pcd.tinkerstart for tinker"
+
+print "please input task name"
+gets
+roslaunch d_pcl record_pcds_from_primesense.launch dir:=$(str)
+
