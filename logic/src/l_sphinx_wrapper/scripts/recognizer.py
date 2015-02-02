@@ -4,7 +4,7 @@
 # Module        : l_sphinx_wrapper@tinker
 # Author        : bss
 # Creation date : 2015-02-02
-#  Last modified: 2015-02-02, 19:54:21
+#  Last modified: 2015-02-02, 20:43:48
 # Description   : pocketsphinx wrapper. support 
 #       inspired by http://wiki.ros.org/pocketsphinx
 #
@@ -38,12 +38,17 @@ class recognizer(object):
         rospy.init_node('recognizer')
         self.pub = rospy.Publisher('/recognizer/output',String)
         rospy.on_shutdown(self.shutdown)
+        
+        # package path
+        self.package_path = rospkg.RosPack().get_path('l_sphinx_wrapper')
+        self.task_path = self.package_path \
+                + '/../../../share/l_sphinx_wrapper'
 
         # services to start/stop recognition
         rospy.Service("/recognizer/start", Empty, self.start)
         rospy.Service("/recognizer/stop", Empty, self.stop)
         # services to change grammar model
-        rospy.Service("/recognizer/change_model", ChangeFSG, self.change)
+        rospy.Service("/recognizer/change_fsg", ChangeFSG, self.changeFSG)
         rospy.Service("/recognizer/change_task",
                 ChangeTask, self.changeTask)
 
@@ -89,24 +94,57 @@ class recognizer(object):
         #vader.set_property('silent', True)
         return EmptyResponse()
 
-    def change(self, req):
+    def changeFSG(self, req):
         # parameters for fsg and dic
+        asr = self.pipeline.get_by_name('asr')
+        fsg_ = req.fsg
+        dict_ = req.dict
+
+        if not os.path.isfile(fsg_):
+            rospy.logerr('The fsg file %s does not exist.' % fsg_)
+            return ChangeTaskResponse(False)
+        if not os.path.isfile(dict_):
+            rospy.logerr('The dict file %s does not exist.' % dict_)
+            return ChangeTaskResponse(False)
+            
         try:
-            fsg_ = req.fsg
             asr.set_property('fsg', fsg_)
         except:
-            rospy.logerr('Please specify a fsg grammar file')
+            rospy.logerr('The fsg grammar file %s is invalid.' % fsg_)
             return ChangeFSGResponse(False)
         try:
-            dict_ = req.dict
             asr.set_property('dict', dict_)
         except:
-            rospy.logerr('Please specify a dictionary')
+            rospy.logerr('The dictionary %s is invalid.' % dict_)
             return ChangeFSGResponse(False)
         return ChangeFSGResponse(True)
 
     def changeTask(self, req):
-        taskname = req.name
+        # parameters for task
+        asr = self.pipeline.get_by_name('asr')
+        filedir = self.task_path + '/' + req.name
+        fsg_ = filedir + '/finite_state.fsg'
+        dict_ = filedir + '/words.dic'
+
+        if not os.path.isfile(fsg_):
+            rospy.logerr('The fsg file %s does not exist.' % fsg_)
+            return ChangeTaskResponse(False)
+        if not os.path.isfile(dict_):
+            rospy.logerr('The dict file %s does not exist.' % dict_)
+            return ChangeTaskResponse(False)
+
+        try:
+            asr.set_property('fsg', fsg_)
+        except Exception, e:
+            rospy.logerr('Error: %s'%e)
+            rospy.logerr('The fsg grammar file %s is invalid.' % fsg_)
+            return ChangeTaskResponse(False)
+        try:
+            asr.set_property('dict', dict_)
+        except Exception, e:
+            rospy.logerr('Error: %s'%e)
+            rospy.logerr('The dictionary %s is invalid.' % dict_)
+            return ChangeTaskResponse(False)
         return ChangeTaskResponse(True)
 
     def asr_partial_result(self, asr, text, uttid):
