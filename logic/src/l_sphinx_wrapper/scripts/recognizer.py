@@ -4,7 +4,7 @@
 # Module        : l_sphinx_wrapper@tinker
 # Author        : bss
 # Creation date : 2015-02-02
-#  Last modified: 2015-02-02, 19:20:01
+#  Last modified: 2015-02-02, 19:54:21
 # Description   : pocketsphinx wrapper. support 
 #       inspired by http://wiki.ros.org/pocketsphinx
 #
@@ -43,7 +43,7 @@ class recognizer(object):
         rospy.Service("/recognizer/start", Empty, self.start)
         rospy.Service("/recognizer/stop", Empty, self.stop)
         # services to change grammar model
-        rospy.Service("/recognizer/change", ChangeFSG, self.change)
+        rospy.Service("/recognizer/change_model", ChangeFSG, self.change)
         rospy.Service("/recognizer/change_task",
                 ChangeTask, self.changeTask)
 
