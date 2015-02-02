@@ -7,6 +7,15 @@ tinker启动脚本
 cd $TINKER_WORKSPACE
 ./start.py
 ```
+
+如果在远程执行，无法打开新标签页，
+请运行
+
+```bash
+cd $TINKER_WORKSPACE
+./start.py --remote
+```
+
 然后根据提示操作。
 
 脚本会解析ui/start/main.tinkerstart文件，
