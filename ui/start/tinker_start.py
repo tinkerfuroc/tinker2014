@@ -4,7 +4,7 @@
 # Module        : tinker
 # Author        : bss
 # Creation date : 2015-02-01
-#  Last modified: 2015-02-02, 22:36:42
+#  Last modified: 2015-02-03, 00:06:34
 # Description   : Startup script for tinker, main body.
 #
 
@@ -17,14 +17,16 @@ import signal
 
 from std_msgs.msg import String
 from d_say.srv import *
-import subprocess
+
+from prepare_speechrec import prepareSpeechrec
 
 class Starter:
     def __init__(self):
         self.config = ConfigParser.SafeConfigParser(
-                {'xdotool_sleep_time': '4'}
+                {'xdotool_sleep_time': '4',
+                'allow_speech_recognize': '1'}
         )
-        self.cwd = os.path.split(os.path.realpath(__file__))[0];
+        self.cwd = os.path.split(os.path.realpath(__file__))[0]
         self.gets_str = ''
         self.isRemote = False
         self.tabNum = 0
@@ -235,21 +237,31 @@ class Starter:
         self.sel_key = None
         self.sel_voice = None
 
+        if self.allow_speech_recognize:
+            self.PrepareForSpeechrec(menus, hash(menu))
+
         # 暂时这样写:外部调用fromKeyboard,
         # 如果callback得到结果也通过fromKeyboard返回
-        select_voice = self.SelectACase_Funcs(menus)
+        select_voice = self.SelectACase_Funcs(
+                menus, self.allow_speech_recognize)
         sel = select_voice.fromKeyboard(menu, count)
 
         return sel
 
+    def PrepareForSpeechrec(self, menus, hashcode):
+        ps = prepareSpeechrec(menus)
+        ps.Prepare(hashcode)
+
 
     class SelectACase_Funcs:
-        def __init__(self, menus):
+        def __init__(self, menus, allow_speech_recognize):
             self.sel_voice = None
             self.menus = menus
             self.sel = 0
-            self.sub = rospy.Subscriber('/recognizer/output', String,
-                    self.callback)
+            self.allow_speech_recognize = allow_speech_recognize
+            if self.allow_speech_recognize:
+                self.sub = rospy.Subscriber('/recognizer/output', String,
+                        self.callback)
 
         # input from voice
         def callback(self, data):
@@ -277,7 +289,8 @@ class Starter:
                     print('Error: input out of range.')
                     sel = 0
             signal.alarm(0)
-            self.sub.unregister()
+            if self.allow_speech_recognize:
+                self.sub.unregister()
             if self.sel_voice is not None:
                 return self.sel_voice
             else:
@@ -285,6 +298,7 @@ class Starter:
 
         def timeoutHandler(self, signum, frame):
             raise Exception('timeout')
+
 
     def GetOpts(self, argv):
         try:
@@ -310,6 +324,9 @@ class Starter:
         self.config.read(self.cwd + '/settings.ini')
         # opts
         self.GetOpts(argv)
+
+        t = self.config.get('scripts', 'allow_speech_recognize')
+        self.allow_speech_recognize = (str(t) != '0')
 
         self.StartNewTab('roscore')
         rospy.init_node('tinker_start', anonymous=True)

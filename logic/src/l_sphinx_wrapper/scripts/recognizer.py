@@ -4,7 +4,7 @@
 # Module        : l_sphinx_wrapper@tinker
 # Author        : bss
 # Creation date : 2015-02-02
-#  Last modified: 2015-02-02, 20:43:48
+#  Last modified: 2015-02-02, 23:47:31
 # Description   : pocketsphinx wrapper. support 
 #       inspired by http://wiki.ros.org/pocketsphinx
 #
@@ -77,7 +77,7 @@ class recognizer(object):
         bus = self.pipeline.get_bus()
         bus.add_signal_watch()
         bus.connect('message::application', self.application_message)
-        self.start(None)
+        #self.start(None)
         gtk.main()
         
     def shutdown(self):
@@ -96,6 +96,8 @@ class recognizer(object):
 
     def changeFSG(self, req):
         # parameters for fsg and dic
+        self.stop(None)
+
         asr = self.pipeline.get_by_name('asr')
         fsg_ = req.fsg
         dict_ = req.dict
@@ -106,7 +108,7 @@ class recognizer(object):
         if not os.path.isfile(dict_):
             rospy.logerr('The dict file %s does not exist.' % dict_)
             return ChangeTaskResponse(False)
-            
+
         try:
             asr.set_property('fsg', fsg_)
         except:
@@ -117,10 +119,14 @@ class recognizer(object):
         except:
             rospy.logerr('The dictionary %s is invalid.' % dict_)
             return ChangeFSGResponse(False)
+
+        self.start(None)
         return ChangeFSGResponse(True)
 
     def changeTask(self, req):
         # parameters for task
+        self.stop(None)
+
         asr = self.pipeline.get_by_name('asr')
         filedir = self.task_path + '/' + req.name
         fsg_ = filedir + '/finite_state.fsg'
@@ -145,6 +151,8 @@ class recognizer(object):
             rospy.logerr('Error: %s'%e)
             rospy.logerr('The dictionary %s is invalid.' % dict_)
             return ChangeTaskResponse(False)
+
+        self.start(None)
         return ChangeTaskResponse(True)
 
     def asr_partial_result(self, asr, text, uttid):
