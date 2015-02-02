@@ -17,6 +17,7 @@ public:
     histo(histo&);
     ~histo();
     histo operator+(const histo& a);
+    void operator=(const histo& a);
     void set_size(int n);
     histo* calc_histogram(PointCloudT::Ptr& cloud,
             float max_y, float min_y);
@@ -57,7 +58,7 @@ histo::histo(histo& a)
     data = new float[size];
     for (int i = 0; i < size; i++)
         data[i] = a.data[i];
-    sum = 0;
+    sum = a.sum;
 }
 
 histo::histo(int n)
@@ -94,6 +95,17 @@ histo histo::operator+(const histo& a)
 	}
     re.sum = this->sum + a.sum;
 	return re;
+}
+
+void histo::operator=(const histo& a)
+{
+    size = a.size;
+    data = new float[size];
+    for (int i = 0; i < size; i++)
+    {
+        data[i] = a.data[i];
+    }
+    sum = a.sum;
 }
 
 void histo::rgb2hsv(int r, int g, int b, float& h, float& s, float& v)

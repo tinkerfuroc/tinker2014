@@ -287,24 +287,18 @@ int main (int argc, char** argv)
                             *cloud_people);
                     if (pic_count <= 10)
                     {
-                        printf("AAAAAAA\n");
                         histo* tmp = sample->calc_histogram(cloud_people,
                                 it->getMax()(1), it->getMin()(1));
-                        printf("AAAAAAA\n");
-                        //*sample = *sample + *tmp;
-                        printf("AAAAAAA\n");
+                        *sample = *sample + *tmp;
                         pic_count++;
-                        printf("AAAAAAA\n");
                     }
                     else if (pic_count == 11)
                     {
-                        printf("BBBBBBB\n");
                         sample->normalize();
                         pic_count++;
                     }
                     else
                     {
-                        printf("CCCCCCC\n");
                         histo* tmp = sample->calc_histogram(cloud_people,
                                 it->getMax()(1), it->getMin()(1));
                         float dist = sample->histo_dist_sq(tmp);
