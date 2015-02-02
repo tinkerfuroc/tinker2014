@@ -135,7 +135,7 @@ int main (int argc, char** argv)
 
     // Algorithm parameters:
     std::string svm_filename = package_path +
-      "/trainedLinearSVMForPeopleDetectionWithHOG.yaml";
+            "/trainedLinearSVMForPeopleDetectionWithHOG.yaml";
     float min_confidence = -1.5;
     float min_height = 1.3;
     float max_height = 2.3;
@@ -239,7 +239,6 @@ int main (int argc, char** argv)
     float hist_dist_min = 0;
     std::vector<pcl::people::PersonCluster<PointT> >::iterator it_min;
     int k_min = 0;
-
     // Main loop:
     while (!viewer.wasStopped())
     {
@@ -286,20 +285,27 @@ int main (int argc, char** argv)
                     //k++;
                     pcl::copyPointCloud(*cloud, it->getIndices(),
                             *cloud_people);
+                    printf("pic_count is %d\n", pic_count);
                     if (pic_count <= 10)
                     {
+                        printf("AAAAAAA\n");
                         histo* tmp = sample->calc_histogram(cloud_people,
                                 it->getMax()(1), it->getMin()(1));
-                        *sample = *sample + *tmp;
+                        printf("AAAAAAA\n");
+                        //*sample = *sample + *tmp;
+                        printf("AAAAAAA\n");
                         pic_count++;
+                        printf("AAAAAAA\n");
                     }
                     else if (pic_count == 11)
                     {
+                        printf("BBBBBBB\n");
                         sample->normalize();
                         pic_count++;
                     }
                     else
                     {
+                        printf("CCCCCCC\n");
                         histo* tmp = sample->calc_histogram(cloud_people,
                                 it->getMax()(1), it->getMin()(1));
                         float dist = sample->histo_dist_sq(tmp);
