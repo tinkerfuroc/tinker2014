@@ -4,7 +4,7 @@
 # Module        : l_sphinx_wrapper@tinker
 # Author        : bss
 # Creation date : 2015-02-02
-#  Last modified: 2015-02-02, 17:10:02
+#  Last modified: 2015-02-02, 19:20:01
 # Description   : pocketsphinx wrapper. support 
 #       inspired by http://wiki.ros.org/pocketsphinx
 #
@@ -42,8 +42,10 @@ class recognizer(object):
         # services to start/stop recognition
         rospy.Service("/recognizer/start", Empty, self.start)
         rospy.Service("/recognizer/stop", Empty, self.stop)
-        # service to change grammar model
+        # services to change grammar model
         rospy.Service("/recognizer/change", ChangeFSG, self.change)
+        rospy.Service("/recognizer/change_task",
+                ChangeTask, self.changeTask)
 
         # configure pipeline
         self.pipeline = gst.parse_launch('gconfaudiosrc ! audioconvert '
@@ -61,14 +63,12 @@ class recognizer(object):
             asr.set_property('fsg', fsg_)
         except:
             rospy.logerr('Please specify a fsg grammar file')
-            return
         try:
             dict_ = rospy.get_param('~dict')
+            asr.set_property('dict', dict_)
         except:
             rospy.logerr('Please specify a dictionary')
-            return
 
-        asr.set_property('dict', dict_)
         bus = self.pipeline.get_bus()
         bus.add_signal_watch()
         bus.connect('message::application', self.application_message)
@@ -103,8 +103,11 @@ class recognizer(object):
         except:
             rospy.logerr('Please specify a dictionary')
             return ChangeFSGResponse(False)
-
         return ChangeFSGResponse(True)
+
+    def changeTask(self, req):
+        taskname = req.name
+        return ChangeTaskResponse(True)
 
     def asr_partial_result(self, asr, text, uttid):
         """ Forward partial result signals on the bus to the main thread. """
