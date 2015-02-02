@@ -117,8 +117,12 @@ int main (int argc, char** argv)
   if(pcl::console::find_switch (argc, argv, "--help") || pcl::console::find_switch (argc, argv, "-h"))
         return print_help();
 
+  // package path
+  std::string package_path = ros::package::getPath("detect_people");
+
   // Algorithm parameters:
-  std::string svm_filename = "../trainedLinearSVMForPeopleDetectionWithHOG.yaml";
+  std::string svm_filename = package_path +
+      "/trainedLinearSVMForPeopleDetectionWithHOG.yaml";
   float min_confidence = -1.5;
   float min_height = 1.3;
   float max_height = 2.3;
@@ -139,7 +143,6 @@ int main (int argc, char** argv)
   int i = 0;
   std::stringstream id;
   id << i;
-  std::string package_path = ros::package::getPath("detect_people");
   std::string pcd_path = package_path + "/../../../share/d_pcl/";
   std::string pcd_folder = "1";
   std::string file_path = pcd_path + pcd_folder + "/pcd" + id.str() + ".pcd";
