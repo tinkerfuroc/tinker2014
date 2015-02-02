@@ -39,6 +39,7 @@ sudo apt-get install sphinxbase-utils    # sphinx_jsgf2fsg命令
 
 ```bash
 sudo apt-get install python-gst0.10 gstreamer0.10-pocketsphinx
+sudo apt-get install gstreamer0.10-gconf    # 应该已经自动安装了
 ```
 
 #####初始化任务
