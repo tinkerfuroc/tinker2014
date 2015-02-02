@@ -4,7 +4,7 @@
 # Module        : tinker
 # Author        : bss
 # Creation date : 2015-02-01
-#  Last modified: 2015-02-02, 10:48:03
+#  Last modified: 2015-02-02, 22:36:42
 # Description   : Startup script for tinker, main body.
 #
 
@@ -13,6 +13,8 @@ import os
 import rospy
 import ConfigParser
 import getopt
+import signal
+
 from std_msgs.msg import String
 from d_say.srv import *
 import subprocess
@@ -97,7 +99,7 @@ class Starter:
             if line == 'end':
                 nesting_level -= 1
                 if nesting_level < 0:
-                    self.RaiseError(filename, count, originLine.strip('\n'),
+                    RaiseError(filename, count, originLine.strip('\n'),
                             'SyntaxError: found an unexcepted "end".')
                     break
                 if nesting_level == 0:
@@ -114,7 +116,7 @@ class Starter:
                 continue
             if line.startswith('speak'):
                 value = line[len('speak'):].strip()
-                value = self.RemoveQuotes(value)
+                value = RemoveQuotes(value)
                 self.Speak(value)
                 continue
             if line == 'switch':
@@ -139,7 +141,7 @@ class Starter:
                 self.StartNewTab(line)
                 continue
             if line.startswith('exec'):
-                value = self.RemoveQuotes(line[len('exec'):].strip())
+                value = RemoveQuotes(line[len('exec'):].strip())
                 try:
                     self.RunFile(value)
                 except Exception, e:
@@ -147,15 +149,15 @@ class Starter:
                             + filename + ': ' + str(count) + ': %s'%e)
                 continue 
             if line.startswith('case'):
-                self.RaiseError(filename, count, originLine.strip('\n'),
+                RaiseError(filename, count, originLine.strip('\n'),
                         'SyntaxError: found an unexcepted "case".')
                 break
             if line.startswith('break'):
-                self.RaiseError(filename, count, originLine.strip('\n'),
+                RaiseError(filename, count, originLine.strip('\n'),
                         'SyntaxError: found an unexcepted "break".')
                 break
             if not handled:
-                self.RaiseError(filename, count, originLine.strip('\n'),
+                RaiseError(filename, count, originLine.strip('\n'),
                         'SyntaxError: unable to understand this line.')
                 break
 
@@ -171,19 +173,23 @@ class Starter:
             if line.startswith('case'):
                 nesting_level += 1
                 if nesting_level == 1:
-                    cases.append(self.RemoveQuotes(
+                    cases.append(RemoveQuotes(
                             line[len('case'):].strip()))
                     continue
             if line.startswith('break'):
                 nesting_level -= 1
                 if nesting_level < 0:
-                    self.RaiseError(filename, count, originLine.strip('\n'),
+                    RaiseError(filename, count, originLine.strip('\n'),
                             'SyntaxError: found an unexcepted "break".')
                     break
 
         self.SwitchBack()
         # select a case by keyboard (or voice?)
         sel = self.SelectACase(cases)
+        if sel <= 0:
+            RaiseError(filename, count, originLine.strip('\n'),
+                    'Error: invalid selection.')
+            return
         self.HandleCase(lines, cases[sel-1], filename, linenumber)
 
     def HandleCase(self, lines, theCase, filename, linenumber):
@@ -198,7 +204,7 @@ class Starter:
             if line.startswith('break'):
                 nesting_level -= 1
                 if nesting_level < 0:
-                    self.RaiseError(filename, count, originLine.strip('\n'),
+                    RaiseError(filename, count, originLine.strip('\n'),
                             'SyntaxError: found an unexcepted "break".')
                     break
                 if nesting_level == 0 and found:
@@ -209,7 +215,7 @@ class Starter:
                 values.append(originLine)
             if line.startswith('case'):
                 nesting_level += 1
-                case = self.RemoveQuotes(line[len('case'):].strip())
+                case = RemoveQuotes(line[len('case'):].strip())
                 if (nesting_level) == 1 and (case == theCase):
                     found = True
                     linenumberOfNesting = count
@@ -218,31 +224,67 @@ class Starter:
     def SelectACase(self, cases):
         menu = 'Please select:'
         count = 0
+        menus = []
         for case in cases:
             count += 1
             menu += ' %d.(%s)' % (count, case)
+            menus.append(case.lower().replace(',', '').replace('.', '')
+                    .strip())
+
         sel = 0
-        while (not rospy.is_shutdown()) and (sel == 0):
-            print(menu)
-            try:
-                sel = int(input())
-            except:
-                print('Error: invalid input.')
-                continue
-            if sel <= 0 or sel > count:
-                print('Error: input out of range.')
-                sel = 0
+        self.sel_key = None
+        self.sel_voice = None
+
+        # 暂时这样写:外部调用fromKeyboard,
+        # 如果callback得到结果也通过fromKeyboard返回
+        select_voice = self.SelectACase_Funcs(menus)
+        sel = select_voice.fromKeyboard(menu, count)
+
         return sel
 
-    def RaiseError(self, filename, linenumber, line, desc):
-        print(filename + ':' + str(linenumber) + ': ' + line)
-        print('Error: ' + desc)
-        raise Exception(desc)
 
-    def RemoveQuotes(self, value):
-        if value.startswith('"') and value.startswith('"'):
-            value = value[1:-1]
-        return value
+    class SelectACase_Funcs:
+        def __init__(self, menus):
+            self.sel_voice = None
+            self.menus = menus
+            self.sel = 0
+            self.sub = rospy.Subscriber('/recognizer/output', String,
+                    self.callback)
+
+        # input from voice
+        def callback(self, data):
+            for i in range(0, len(self.menus)):
+                if data.data.strip() == self.menus[i]:    # done
+                    self.sel_voice = i + 1
+                    print(self.sel_voice)
+
+        # input from keyboard
+        def fromKeyboard(self, menu, count):
+            sel = 0
+            print(menu)
+            signal.signal(signal.SIGALRM, self.timeoutHandler)
+            while ((not rospy.is_shutdown()) and (sel == 0)
+                    and (self.sel_voice == None)):
+                signal.alarm(1)
+                try:
+                    sel = int(input())
+                except Exception, e:
+                    if str(e) != 'timeout':
+                        print('Error: invalid input: %s'%e)
+                        print(menu)
+                    continue
+                if sel <= 0 or sel > count:
+                    print('Error: input out of range.')
+                    sel = 0
+            signal.alarm(0)
+            self.sub.unregister()
+            if self.sel_voice is not None:
+                return self.sel_voice
+            else:
+                return sel
+
+        def timeoutHandler(self, signum, frame):
+            raise Exception('timeout')
 
     def GetOpts(self, argv):
         try:
@@ -274,6 +316,7 @@ class Starter:
         self.StartNewTab('rosrun d_say say_node.py')
         self.say_pub = rospy.Publisher(
                 '/say/sentence', String, queue_size=1)
+        self.StartNewTab('rosrun l_sphinx_wrapper recognizer.py')
 
         self.SwitchBack()
         self.rate = rospy.Rate(10)
@@ -284,6 +327,16 @@ class Starter:
         print('Press C-c to exit...')
         self.Wait()
         
+def RaiseError(filename, linenumber, line, desc):
+    print(filename + ':' + str(linenumber) + ': ' + line)
+    print('Error: ' + desc)
+    raise Exception(desc)
+
+def RemoveQuotes(value):
+    if value.startswith('"') and value.startswith('"'):
+        value = value[1:-1]
+    return value
+
 def main(argv):
     starter = Starter()
     starter.Start(argv)
