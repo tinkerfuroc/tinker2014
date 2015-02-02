@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # file: init.py
 # created by bss at 2014-05-09
-# Last modified: 2015-01-01, 18:06:16
+# Last modified: 2015-02-02, 17:16:44
 # 初始化一组语音识别的任务
 #
 
@@ -64,7 +64,7 @@ def initDir(task):
     fp = open(outdir + '/' + task + '.launch', 'w')
     fp.write('<launch>\n')
     fp.write('\n')
-    fp.write('  <node name="recognizer" pkg="pocketsphinx" ' \
+    fp.write('  <node name="recognizer" pkg="l_sphinx_wrapper" ' \
             + 'type="recognizer.py" output="screen">\n')
     fp.write('    <param name="fsg" ' \
             + 'value="$(find l_sphinx_wrapper)/launches/tasks/' \
