@@ -104,6 +104,7 @@ include_directories(
   include
 )
 link_directories(
+  #/usr/lib
   ${PCL_LIBRARY_DIRS}
 )
 add_definitions(

@@ -2,7 +2,7 @@
 // File         : reading_pcd.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-02-01, 14:46:06
+// Last modified: 2015-02-02, 10:55:11
 // Description  : read pcd from file
 // 
 
@@ -62,7 +62,7 @@ int main(int argc, char** argv)
     }
     else if (pcd_num == 0)   // no file at all
     {
-        printf("Error: no valid file in the dir.\n");
+        fprintf(stderr, "Error: no valid file in the dir.\n");
         return -1;
     }
     printf("Don't worry about the \"Could not find file\" warning.\n");
@@ -77,7 +77,7 @@ int main(int argc, char** argv)
         {
             if ("key" == repeat_func)
             {
-                printf("Press a key to play again."
+                fprintf(stderr, "Press a key to play again."
                         "q+Enter or C-c to quit.");
                 char ch = getchar();
                 if ('q' == ch || 'Q' == ch)
@@ -171,7 +171,8 @@ bool AnalysisOpts(int argc, char** argv,
             ++i;
             if (i == argc)
             {
-                printf("Error: please input dir name after -d/--dir.\n");
+                fprintf(stderr,
+                        "Error: please input dir name after -d/--dir.\n");
                 return false;
             }
             pcd_name = argv[i];
@@ -182,7 +183,8 @@ bool AnalysisOpts(int argc, char** argv,
             ++i;
             if (i == argc)
             {
-                printf("Error: please input rate as a parameter.\n");
+                fprintf(stderr,
+                        "Error: please input rate as a parameter.\n");
                 return false;
             }
             rate_Hz = atoi(argv[i]);
@@ -193,7 +195,7 @@ bool AnalysisOpts(int argc, char** argv,
             ++i;
             if (i == argc)
             {
-                printf("Error: please select repeat logic: ");
+                fprintf(stderr, "Error: please select repeat logic: ");
                 printf("always,delay,key,not\n");
                 return false;
             }
@@ -203,7 +205,7 @@ bool AnalysisOpts(int argc, char** argv,
                 ++i;
                 if (i == argc)
                 {
-                    printf("Error: please input repeat times,");
+                    fprintf(stderr, "Error: please input repeat times,");
                     printf("for example: -l delay 10\n");
                     return false;
                 }
@@ -215,7 +217,7 @@ bool AnalysisOpts(int argc, char** argv,
         }
         else
         {
-            printf("Error: unknown parameter.\n");
+            fprintf(stderr, "Error: unknown parameter.\n");
             Usage();
             return false;
         }
