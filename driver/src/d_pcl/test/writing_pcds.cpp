@@ -2,7 +2,7 @@
 // File         : writing_pcds.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-02-01, 15:04:44
+// Last modified: 2015-02-02, 10:52:04
 // Description  : show ros-style pointcloud.
 // 
 
@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     }
     if ("" == pcd_name)
     {
-        printf("Error: must input a dir name.\n");
+        fprintf(stderr, "Error: must input a dir name.\n");
         Usage();
         return 2;
     }
@@ -61,13 +61,13 @@ int main(int argc, char** argv)
     fflush(stdout);
     if (dir_not_exist)    // not exist
     {
-        printf("will create new dir.\n");
+        fprintf(stderr, "dir do not exists, will create new dir.\n");
         cmd = "mkdir " + pcd_path;
         system(cmd.c_str());
     }
     else    // exist
     {
-        printf("dir already exists, clear it? [Y/n]");
+        fprintf(stderr, "dir already exists, clear it? [Y/n]");
         char ch = getchar();
         if ('Y' == ch || 'y' == ch || '\r' == ch || '\n' == ch)
         {
@@ -133,7 +133,8 @@ bool AnalysisOpts(int argc, char** argv,
             }
             if (i == argc)
             {
-                printf("Error: please input dir name after -d/--dir.\n");
+                fprintf(stderr,
+                        "Error: please input dir name after -d/--dir.\n");
                 return false;
             }
             if (!IsValidDir(argv[i]))
@@ -151,7 +152,8 @@ bool AnalysisOpts(int argc, char** argv,
             ++i;
             if (i == argc)
             {
-                printf("Error: please input rate as a parameter.\n");
+                fprintf(stderr,
+                        "Error: please input rate as a parameter.\n");
                 return false;
             }
             rate_Hz = atoi(argv[i]);
