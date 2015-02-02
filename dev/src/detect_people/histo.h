@@ -119,7 +119,7 @@ void histo::rgb2hsv(int r, int g, int b, float& h, float& s, float& v)
 
 int histo::MIN_cmp(int a, int b)
 {
-	return a>b?a:b;
+	return a<b?a:b;
 }
 
 int histo::max(int a, int b, int c)

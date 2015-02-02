@@ -285,7 +285,6 @@ int main (int argc, char** argv)
                     //k++;
                     pcl::copyPointCloud(*cloud, it->getIndices(),
                             *cloud_people);
-                    printf("pic_count is %d\n", pic_count);
                     if (pic_count <= 10)
                     {
                         printf("AAAAAAA\n");
