@@ -5,6 +5,42 @@ tinker2014
 
 ------
 
+#目前有的包
+
+##driver工作空间
+
+####d_say
+发出声音
+
+####d_cv
+将primesense采集的图像转换为opencv格式
+
+####d_pcl
+pcl相关驱动
+
+##logic工作空间
+
+####l_sphinx_wrapper
+使用pocketsphinx进行语音识别相关
+
+##decision工作空间
+
+####answer_questions
+回答问题
+
+##其他
+
+####ui/start
+启动脚本，
+启动方法是
+
+```bash
+cd $TINKER_WORKSPACE
+./start.py
+```
+
+------
+
 #重构设想
 
 ##文件结构
@@ -41,7 +77,6 @@ downloaded中的package应尽量保持原样。
 share文件夹中放资源文件(如*.jpg)，
 ui文件夹中放启动脚本等等非ROS的程序。
 
-~~缺点是编译时需要cd到各个workspace下执行catkin_make。~~
 目前最上层的编译管理使用Makefile，
 但单独编译某个workspace时，
 不能自动分析不同workspace之间的依赖来决定是否编译其他workspace。
@@ -103,7 +138,6 @@ http://www.ros.org/browse/list.php
 
 - driver中的package以d开头，
 然后按
-~~驼峰命名法命名，如dSerial~~
 ROS建议的方法命名：
 所有字母小写，
 以下划线分隔，
@@ -111,14 +145,12 @@ ROS建议的方法命名：
 
 - logic中的package以l开头，
 然后按
-~~驼峰命名法命名，如lParser~~
 ROS建议的方法命名：
 所有字母小写，
 以下划线分隔，
 如l_parser
 
 - decision中的package直接按
-~~驼峰命名法命名，首字母大写，如AnswerQuestions~~
 ROS建议的方法命名，
 如answer_questions
 

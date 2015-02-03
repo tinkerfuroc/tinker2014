@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # file: input2dict.py
 # created by bss at 2014-04-30
-# Last modified: 2015-01-01, 18:05:21
+# Last modified: 2015-02-02, 23:29:17
 # 把输入转化为字典
 #
 
@@ -15,6 +15,7 @@ def Usage():
     print('把输入的句子、单词转化为发音字典')
     print('-h,--help: print help message.')
     print('-t,--task: input the name of the task.')
+    print('-i,-o: specify input/out file name.')
     print('')
     print('example:')
     print('python input2dict.py -t whoiswho')
@@ -24,7 +25,7 @@ def main(argv):
         Usage()
         sys.exit(2)
     try:
-        opts, args = getopt.getopt(argv[1:], 'ht:', ['help', 'task='])
+        opts, args = getopt.getopt(argv[1:], 'ht:i:o:', ['help', 'task='])
     except getopt.GetoptError, err:
         print(str(err))
         Usage()
@@ -33,6 +34,8 @@ def main(argv):
         Usage()
         sys.exit(1)
 
+    inputfile = ''
+    outputfile = ''
     for o, a in opts:
         if o in ('-h', '--help'):
             Usage()
@@ -40,12 +43,23 @@ def main(argv):
         elif o in ('-t', '--task'):
             processTask(a)
             sys.exit(0)
+        elif o in ('-i'):
+            inputfile = a
+        elif o in ('-o'):
+            outputfile = a
+    if inputfile != '' and outputfile != '':
+        processFile(inputfile, outputfile)
 
 def processTask(task):
-    scriptdir = rospkg.RosPack().get_path('l_sphinx_wrapper') \
-            + '/../../../ui/l_sphinx_wrapper'
     taskdir = rospkg.RosPack().get_path('l_sphinx_wrapper') \
             + '/launches/tasks/' + task
+    inputfile = taskdir + '/sent.txt'
+    outputfile = taskdir + '/words.dic'
+    processFile(inputfile, outputfile)
+
+def processFile(inputfile, outputfile):
+    scriptdir = rospkg.RosPack().get_path('l_sphinx_wrapper') \
+            + '/../../../ui/l_sphinx_wrapper'
     fp = open(scriptdir + '/cmudict_SPHINX_40', 'r')
     cmudict = {}
     for line in fp.readlines():
@@ -53,7 +67,7 @@ def processTask(task):
         cmudict[col[0]] = col[1]
     fp.close()
 
-    fp = open(taskdir + '/sent.txt', 'r')
+    fp = open(inputfile, 'r')
     words = []
     for line in fp.readlines():
         col = line.strip().upper().split()
@@ -63,7 +77,7 @@ def processTask(task):
 
     words = list(set(words))
 
-    fp = open(taskdir + '/words.dic', 'w')
+    fp = open(outputfile, 'w')
     for word in words:
         isSucceed = False
         try:
