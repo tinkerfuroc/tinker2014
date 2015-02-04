@@ -47,7 +47,7 @@ def playSound(sent):
 
 def main(argv):
     # Listen to /say
-    rospy.init_node('say_node', anonymous=True)
+    rospy.init_node('say_node')
     rospy.Subscriber('/say/sentence', String, getSpeechCallback)
     s = rospy.Service('/say/IsPlaying', IsPlaying, handle_IsPlaying)
     rospy.spin()

@@ -3,24 +3,24 @@
 # Module        : tinker
 # Author        : bss
 # Creation Date : 2015-02-01
-#  Last modified: 2015-02-02, 23:53:13
+#  Last modified: 2015-02-04, 10:32:40
 # Description   :
 #
 
-print "main.tinkerstart for tinker"
+print "main.tinkerstart for tinker" # comment
 
 speak "hello, please select a task"
 switch
     case "answer some questions"
         speak "start task answer questions"
         exec "answer_questions"
-        break
+    end
     case "record p c d"
         speak "start task record pcd"
         exec "record_pcd"
-        break
+    end
     case "cancel mission and exit"
-        break
+    end
 end
 
 print "please press enter..."
