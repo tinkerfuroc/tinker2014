@@ -132,6 +132,37 @@ print "A"
 如果语音识别不稳定，
 可以通过在settings.ini中设置allow_speech_recognize为0禁止语音控制。
 
+####loop循环
+循环执行一批代码。
+
+switch必须与end成对出现，
+使用方法见示例。
+
+目前还不能使用break跳出循环。
+
+```
+loop 3  # 3为循环次数，-1表示无限循环
+    speak "please ask me a question"
+    switch
+        case "what is your name"
+            speak "your question is"
+            speak "what is your name"
+            speak "my answer is"
+            speak "Tinker"
+        end
+
+        case "what is the world's most popular green vegetable"
+            speak "your question is"
+            speak "what is the world's most popular green vegetable"
+            speak "my answer is"
+            speak "Lettuce"
+        end
+
+        # ......
+    end
+end # End of loop
+```
+
 ####gets
 用于输入字符串，
 供后续使用。
