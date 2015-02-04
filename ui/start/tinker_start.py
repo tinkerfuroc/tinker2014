@@ -4,7 +4,7 @@
 # Module        : tinker
 # Author        : bss
 # Creation date : 2015-02-01
-#  Last modified: 2015-02-04, 10:28:31
+#  Last modified: 2015-02-04, 10:35:22
 # Description   : Startup script for tinker, main body.
 #
 
@@ -92,6 +92,7 @@ class Starter:
         count = 0
         linenumberOfNesting = 0
         for originLine in lines:
+            originLine = originLine.split('#')[0]
             count += 1
             handled = False
             line = originLine.strip()
@@ -132,7 +133,7 @@ class Starter:
                 continue
             if line == 'gets':
                 try:
-                    # I hope it will work on python 2 and 3
+                    # I hope it will work on both python 2 and 3
                     self.gets_str = sys.stdin.readline().strip('\n')
                 except Exception, e:
                     print('Warning: in gets: %s'%e)
