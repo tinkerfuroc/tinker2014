@@ -4,7 +4,7 @@
 # Module        : tinker
 # Author        : bss
 # Creation date : 2015-02-01
-#  Last modified: 2015-02-04, 09:47:17
+#  Last modified: 2015-02-04, 10:14:59
 # Description   : Startup script for tinker, main body.
 #
 
@@ -327,6 +327,12 @@ class Starter:
 
         t = self.config.get('scripts', 'allow_speech_recognize')
         self.allow_speech_recognize = (str(t) != '0')
+
+        node_is_running = not os.system(
+                'rosnode list | egrep ^/tinker_start$ -q')
+        if node_is_running:
+            print('Error: already running, will exit.')
+            sys.exit(1)
 
         self.StartNewTab('roscore')
         rospy.init_node('tinker_start', anonymous=False)
