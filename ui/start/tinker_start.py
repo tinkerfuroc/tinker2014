@@ -4,7 +4,7 @@
 # Module        : tinker
 # Author        : bss
 # Creation date : 2015-02-01
-#  Last modified: 2015-02-03, 00:06:34
+#  Last modified: 2015-02-04, 09:47:17
 # Description   : Startup script for tinker, main body.
 #
 
@@ -329,7 +329,7 @@ class Starter:
         self.allow_speech_recognize = (str(t) != '0')
 
         self.StartNewTab('roscore')
-        rospy.init_node('tinker_start', anonymous=True)
+        rospy.init_node('tinker_start', anonymous=False)
         self.StartNewTab('rosrun d_say say_node.py')
         self.say_pub = rospy.Publisher(
                 '/say/sentence', String, queue_size=1)
