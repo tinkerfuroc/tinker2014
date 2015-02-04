@@ -4,7 +4,7 @@
 # Module        : tinker
 # Author        : bss
 # Creation date : 2015-02-01
-#  Last modified: 2015-02-04, 10:14:59
+#  Last modified: 2015-02-04, 10:28:31
 # Description   : Startup script for tinker, main body.
 #
 
@@ -110,7 +110,16 @@ class Starter:
                                 linenumberOfNesting)
                         values = []
                 handled = True
+            if line == 'switch':
+                nesting_level += 1
+                if nesting_level == 1:
+                    nesting_type = 'switch'
+                    values = []
+                    linenumberOfNesting = count
+                handled = True
             if nesting_level > 0:
+                if line.startswith('case'): # appear between switch/end
+                    nesting_level += 1
                 values.append(line)
                 continue
             if line.startswith('print'):
@@ -120,13 +129,6 @@ class Starter:
                 value = line[len('speak'):].strip()
                 value = RemoveQuotes(value)
                 self.Speak(value)
-                continue
-            if line == 'switch':
-                nesting_level += 1
-                if nesting_level == 1:
-                    nesting_type = 'switch'
-                    values = []
-                    linenumberOfNesting = count
                 continue
             if line == 'gets':
                 try:
@@ -178,11 +180,11 @@ class Starter:
                     cases.append(RemoveQuotes(
                             line[len('case'):].strip()))
                     continue
-            if line.startswith('break'):
+            if line == 'end':
                 nesting_level -= 1
                 if nesting_level < 0:
                     RaiseError(filename, count, originLine.strip('\n'),
-                            'SyntaxError: found an unexcepted "break".')
+                            'SyntaxError: found an unexcepted "end".')
                     break
 
         self.SwitchBack()
@@ -203,11 +205,11 @@ class Starter:
         for originLine in lines:
             count += 1
             line = originLine.strip()
-            if line.startswith('break'):
+            if line == 'end':
                 nesting_level -= 1
                 if nesting_level < 0:
                     RaiseError(filename, count, originLine.strip('\n'),
-                            'SyntaxError: found an unexcepted "break".')
+                            'SyntaxError: found an unexcepted "end".')
                     break
                 if nesting_level == 0 and found:
                     self.RunLines(values, filename, linenumberOfNesting)
@@ -351,7 +353,7 @@ class Starter:
         self.Wait()
         
 def RaiseError(filename, linenumber, line, desc):
-    print(filename + ':' + str(linenumber) + ': ' + line)
+    print(filename + '.tinkerstart:' + str(linenumber) + ': ' + line)
     print('Error: ' + desc)
     raise Exception(desc)
 

@@ -46,18 +46,18 @@ print "main.tinkerstart for tinker"
 
 speak "hello, please select a task"
 switch
-    case "answer questions"
+    case "answer some questions"
         speak "start task answer questions"
         exec "answer_question"
-        break
+    end
     case "record p c d"
         speak "start task record pcd"
         speak "please input a name"
         gets
         roslaunch d_pcl record_pcds_from_primesense.launch dir:=$(str)
-        break
-    case "cancel"
-        break
+    end
+    case "cancel mission and exit"
+    end
 end
 
 print "please press enter..."
@@ -94,20 +94,20 @@ speak "test"
 用于供用户选择功能。
 
 switch必须与end成对出现，
-case必须与break成对出现。
+case必须与end成对出现。
 使用方法见示例。
 
 ```
 switch
     case "situation A"
         print "A"
-        break
+    end
     case "situation B"
         print "B"
-        break
+    end
     case "cancel mission"
     # cancel是可选的
-        break
+    end
 end
 ```
 
