@@ -2,7 +2,7 @@
 // File         : writing_pcds.cpp
 // Author       : bss
 // Creation Date: 2015-01-29
-// Last modified: 2015-02-02, 10:52:04
+// Last modified: 2015-02-04, 09:59:55
 // Description  : show ros-style pointcloud.
 // 
 
@@ -57,9 +57,9 @@ int main(int argc, char** argv)
     std::string cmd;
     cmd = "[ -d \"" + pcd_path + "\" ]";
     printf("check: %s\n", pcd_name.c_str());
-    bool dir_not_exist = system(cmd.c_str());
+    bool dir_exists = !system(cmd.c_str());     // 成功返回0
     fflush(stdout);
-    if (dir_not_exist)    // not exist
+    if (!dir_exists)    // not exist
     {
         fprintf(stderr, "dir do not exists, will create new dir.\n");
         cmd = "mkdir " + pcd_path;

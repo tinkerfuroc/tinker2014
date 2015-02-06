@@ -46,18 +46,18 @@ print "main.tinkerstart for tinker"
 
 speak "hello, please select a task"
 switch
-    case "answer questions"
+    case "answer some questions"
         speak "start task answer questions"
         exec "answer_question"
-        break
+    end
     case "record p c d"
         speak "start task record pcd"
         speak "please input a name"
         gets
         roslaunch d_pcl record_pcds_from_primesense.launch dir:=$(str)
-        break
-    case "cancel"
-        break
+    end
+    case "cancel mission and exit"
+    end
 end
 
 print "please press enter..."
@@ -68,7 +68,6 @@ system echo "The End"
 
 ####注释
 注释以井号(#)开头。
-目前不允许行中注释。
 
 ####缩进
 缩进的意义是美观，
@@ -94,20 +93,20 @@ speak "test"
 用于供用户选择功能。
 
 switch必须与end成对出现，
-case必须与break成对出现。
+case必须与end成对出现。
 使用方法见示例。
 
 ```
 switch
     case "situation A"
         print "A"
-        break
+    end
     case "situation B"
         print "B"
-        break
+    end
     case "cancel mission"
     # cancel是可选的
-        break
+    end
 end
 ```
 
@@ -132,6 +131,37 @@ print "A"
 
 如果语音识别不稳定，
 可以通过在settings.ini中设置allow_speech_recognize为0禁止语音控制。
+
+####loop循环
+循环执行一批代码。
+
+switch必须与end成对出现，
+使用方法见示例。
+
+目前还不能使用break跳出循环。
+
+```
+loop 3  # 3为循环次数，-1表示无限循环
+    speak "please ask me a question"
+    switch
+        case "what is your name"
+            speak "your question is"
+            speak "what is your name"
+            speak "my answer is"
+            speak "Tinker"
+        end
+
+        case "what is the world's most popular green vegetable"
+            speak "your question is"
+            speak "what is the world's most popular green vegetable"
+            speak "my answer is"
+            speak "Lettuce"
+        end
+
+        # ......
+    end
+end # End of loop
+```
 
 ####gets
 用于输入字符串，

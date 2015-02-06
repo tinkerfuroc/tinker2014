@@ -4,7 +4,7 @@
 # Module        : tinker
 # Author        : bss
 # Creation date : 2015-02-01
-#  Last modified: 2015-02-03, 00:06:34
+#  Last modified: 2015-02-04, 11:23:00
 # Description   : Startup script for tinker, main body.
 #
 
@@ -28,8 +28,9 @@ class Starter:
         )
         self.cwd = os.path.split(os.path.realpath(__file__))[0]
         self.gets_str = ''
-        self.isRemote = False
+        self.isRemote = False   # 在远程执行,无法启动新标签页
         self.tabNum = 0
+        self.isQuiet = False    # 不启动前几个程序,仅供调试本脚本用
 
     def d_say_IsPlaying(self):
         rospy.wait_for_service('/say/IsPlaying')
@@ -43,6 +44,7 @@ class Starter:
 
     def Speak(self, text):
         print('speak: "' + text + '"')
+        self.rate.sleep()
         if self.d_say_IsPlaying():
             print('waiting for d_say...')
             while (not rospy.is_shutdown()) and self.d_say_IsPlaying():
@@ -92,6 +94,7 @@ class Starter:
         count = 0
         linenumberOfNesting = 0
         for originLine in lines:
+            originLine = originLine.split('#')[0]
             count += 1
             handled = False
             line = originLine.strip()
@@ -108,9 +111,31 @@ class Starter:
                     if nesting_type == 'switch':
                         self.HandleSwitch(values, filename,
                                 linenumberOfNesting)
-                        values = []
+                    if nesting_type == 'loop':
+                        self.HandleLoop(values, repeatTimes, filename,
+                                linenumberOfNesting)
+                    values = []
+                handled = True
+            if line == 'switch':
+                nesting_level += 1
+                if nesting_level == 1:
+                    nesting_type = 'switch'
+                    values = []
+                    linenumberOfNesting = count
+                    continue
+                handled = True
+            if line.startswith('loop'):
+                nesting_level += 1
+                if nesting_level == 1:
+                    nesting_type = 'loop'
+                    values = []
+                    linenumberOfNesting = count
+                    repeatTimes = int(line[len('loop'):])
+                    continue
                 handled = True
             if nesting_level > 0:
+                if line.startswith('case'): # appear between switch/end
+                    nesting_level += 1
                 values.append(line)
                 continue
             if line.startswith('print'):
@@ -121,16 +146,9 @@ class Starter:
                 value = RemoveQuotes(value)
                 self.Speak(value)
                 continue
-            if line == 'switch':
-                nesting_level += 1
-                if nesting_level == 1:
-                    nesting_type = 'switch'
-                    values = []
-                    linenumberOfNesting = count
-                continue
             if line == 'gets':
                 try:
-                    # I hope it will work on python 2 and 3
+                    # I hope it will work on both python 2 and 3
                     self.gets_str = sys.stdin.readline().strip('\n')
                 except Exception, e:
                     print('Warning: in gets: %s'%e)
@@ -178,11 +196,11 @@ class Starter:
                     cases.append(RemoveQuotes(
                             line[len('case'):].strip()))
                     continue
-            if line.startswith('break'):
+            if line == 'end':
                 nesting_level -= 1
                 if nesting_level < 0:
                     RaiseError(filename, count, originLine.strip('\n'),
-                            'SyntaxError: found an unexcepted "break".')
+                            'SyntaxError: found an unexcepted "end".')
                     break
 
         self.SwitchBack()
@@ -192,7 +210,7 @@ class Starter:
             RaiseError(filename, count, originLine.strip('\n'),
                     'Error: invalid selection.')
             return
-        self.HandleCase(lines, cases[sel-1], filename, linenumber)
+        self.HandleCase(lines, cases[sel-1], filename, linenumber+1)
 
     def HandleCase(self, lines, theCase, filename, linenumber):
         count = linenumber
@@ -203,11 +221,11 @@ class Starter:
         for originLine in lines:
             count += 1
             line = originLine.strip()
-            if line.startswith('break'):
+            if line == 'end':
                 nesting_level -= 1
                 if nesting_level < 0:
                     RaiseError(filename, count, originLine.strip('\n'),
-                            'SyntaxError: found an unexcepted "break".')
+                            'SyntaxError: found an unexcepted "end".')
                     break
                 if nesting_level == 0 and found:
                     self.RunLines(values, filename, linenumberOfNesting)
@@ -247,6 +265,20 @@ class Starter:
         sel = select_voice.fromKeyboard(menu, count)
 
         return sel
+
+    # run scripts between loop & end
+    def HandleLoop(self, lines, repeatTimes, filename, linenumber):
+        if repeatTimes < 0:
+            try:
+                while True:
+                    self.RunLines(lines, filename, linenumber+1)
+            except Exception, e:
+                if str(e) != 'EOL':     # EOL为准备使用的退出循环方式
+                    raise e
+        else:
+            for i in range(0, repeatTimes):
+                self.RunLines(lines, filename, linenumber+1)
+
 
     def PrepareForSpeechrec(self, menus, hashcode):
         ps = prepareSpeechrec(menus)
@@ -302,7 +334,8 @@ class Starter:
 
     def GetOpts(self, argv):
         try:
-            opts, argv = getopt.getopt(argv[1:], 'h', ['help', 'remote'])
+            opts, argv = getopt.getopt(argv[1:], 'h',
+                    ['help', 'remote', 'quiet'])
         except getopt.GetoptError, e:
             print('Error: invalid argv: %s'%e)
             sys.exit(2)
@@ -316,6 +349,8 @@ class Starter:
                 sys.exit(0)
             if o in ('--remote'):
                 self.isRemote = True
+            if o in ('--quiet'):
+                self.isQuiet = True
 
 
     def Start(self, argv):
@@ -328,15 +363,24 @@ class Starter:
         t = self.config.get('scripts', 'allow_speech_recognize')
         self.allow_speech_recognize = (str(t) != '0')
 
-        self.StartNewTab('roscore')
-        rospy.init_node('tinker_start', anonymous=True)
-        self.StartNewTab('rosrun d_say say_node.py')
+        node_is_running = not os.system(
+                'rosnode list | egrep ^/tinker_start$ -q')
+        if node_is_running:
+            print('Error: already running, will exit.')
+            sys.exit(1)
+
+        if not self.isQuiet:
+            self.StartNewTab('roscore')
+        rospy.init_node('tinker_start', anonymous=False)
+        if not self.isQuiet:
+            self.StartNewTab('rosrun d_say say_node.py')
         self.say_pub = rospy.Publisher(
                 '/say/sentence', String, queue_size=1)
-        self.StartNewTab('rosrun l_sphinx_wrapper recognizer.py')
+        if not self.isQuiet:
+            self.StartNewTab('rosrun l_sphinx_wrapper recognizer.py')
 
         self.SwitchBack()
-        self.rate = rospy.Rate(10)
+        self.rate = rospy.Rate(2)   # 不能太快,不然语音节点反应不过来
         try:
             self.RunFile('main')
         except Exception, e:
@@ -345,7 +389,7 @@ class Starter:
         self.Wait()
         
 def RaiseError(filename, linenumber, line, desc):
-    print(filename + ':' + str(linenumber) + ': ' + line)
+    print(filename + '.tinkerstart:' + str(linenumber) + ': ' + line)
     print('Error: ' + desc)
     raise Exception(desc)
 

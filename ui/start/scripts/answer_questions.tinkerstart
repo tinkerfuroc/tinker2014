@@ -3,9 +3,90 @@
 # Module        : tinker
 # Author        : bss
 # Creation Date : 2015-02-02
-#  Last modified: 2015-02-02, 00:32:34
+#  Last modified: 2015-02-04, 11:15:45
 # Description   :
 #
 
 print "answer_questions.tinkerstart for tinker"
+
+speak "please input the number of questions"
+print "-1表示无限"
+
+gets
+loop $(str)
+    speak "please ask me a question"
+    switch
+        case "what time is it"
+            speak "your question is"
+            speak "what time is it"
+            speak "my answer is"
+            # rosrun answer_questions say_time.py
+            # 这个没写。。
+        end
+
+        case "what is your name"
+            speak "your question is"
+            speak "what is your name"
+            speak "my answer is"
+            speak "Tinker"
+        end
+
+        case "what is the capital of brazil"
+            speak "your question is"
+            speak "what is the capital of brazil"
+            speak "my answer is"
+            speak "Brasilia"
+        end
+
+        case "in which year was robocup founded"
+            speak "your question is"
+            speak "in which year was robocup founded"
+            speak "my answer is"
+            speak "1997"
+        end
+
+        case "how many rings has the olympic flag"
+            speak "your question is"
+            speak "how many rings has the olympic flag"
+            speak "my answer is"
+            speak "5"
+        end
+
+        case "what is the answer to the ultimate question about life the universe and everything"
+            speak "your question is"
+            speak "what is the answer to the ultimate question about life the universe and everything""
+            speak "my answer is"
+            speak "42"
+        end
+
+        case "what is the world's most popular green vegetable"
+            speak "your question is"
+            speak "what is the world's most popular green vegetable"
+            speak "my answer is"
+            speak "Lettuce"
+        end
+
+        case "what is the oldest drug used on earth"
+            speak "your question is"
+            speak "what is the oldest drug used on earth"
+            speak "my answer is"
+            speak "Alcohol"
+        end
+
+        case "which insect has the best eyesight"
+            speak "your question is"
+            speak "which insect has the best eyesight"
+            speak "my answer is"
+            speak "Dragonfly"
+        end
+
+        case "who lives in a pineapple under the sea"
+            speak "your question is"
+            speak "who lives in a pineapple under the sea"
+            speak "my answer is"
+            speak "Spongebob Squarepants"
+        end
+
+    end
+end
 
