@@ -4,7 +4,7 @@
 # Module        : d_say@tinker
 # Author        : bss
 # Creation date : 2014-07-21
-#  Last modified: 2015-01-01, 12:13:30
+#  Last modified: 2015-02-01, 22:49:52
 # Description   : say something through loudspeaker.
 #
 
@@ -15,10 +15,21 @@ import getopt
 import rospkg
 import rospy
 from std_msgs.msg import String
+from d_say.srv import *
+
+isPlaying = False
 
 def getSpeechCallback(data):
+    global isPlaying
+    if isPlaying:
+        return
+    isPlaying = True
     print(data.data)
     playSound(data.data)
+    isPlaying = False
+
+def handle_IsPlaying(req):
+    return isPlaying
 
 def Usage():
     print('say_node.py usage:')
@@ -36,8 +47,9 @@ def playSound(sent):
 
 def main(argv):
     # Listen to /say
-    rospy.init_node('say_node', anonymous=True)
+    rospy.init_node('say_node')
     rospy.Subscriber('/say/sentence', String, getSpeechCallback)
+    s = rospy.Service('/say/IsPlaying', IsPlaying, handle_IsPlaying)
     rospy.spin()
 
 if __name__ == '__main__':

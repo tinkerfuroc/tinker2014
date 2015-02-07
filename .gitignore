@@ -1,4 +1,7 @@
 *~
 .*.swp
+.*.swo
 .DS_Store
 *.DS_Store
+*.pyc
+*.pyd

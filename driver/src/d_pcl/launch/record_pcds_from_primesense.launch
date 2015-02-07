@@ -1,0 +1,22 @@
+<!-- Project      : tinker2014 -->
+<!-- File         : record_pcds_from_primesense.launch -->
+<!-- created by bss at 2015-01-30 -->
+<!-- Last modified: 2015-02-01, 15:03:39
+    !-->
+
+<launch>
+  <!-- dir to write pcd files -->
+  <arg name="dir" />
+
+  <node pkg="openni2_camera" type="openni2_camera_node"
+      name="openni2_camera_node" />
+
+  <include file="$(find d_pcl)/launch/primesense_to_pcl.launch" />
+
+  <node pkg="d_pcl" type="test_writing_pcds" name="test_writing_pcds"
+      args="--dir $(arg dir)" output="screen">
+    <param name="dir" value="$(arg dir)" />
+  </node>
+
+</launch>
+

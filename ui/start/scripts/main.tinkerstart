@@ -1,0 +1,30 @@
+# -*- coding: utf-8 -*-
+# File          : main.tinkerstart
+# Module        : tinker
+# Author        : bss
+# Creation Date : 2015-02-01
+#  Last modified: 2015-02-04, 10:32:40
+# Description   :
+#
+
+print "main.tinkerstart for tinker" # comment
+
+speak "hello, please select a task"
+switch
+    case "answer some questions"
+        speak "start task answer questions"
+        exec "answer_questions"
+    end
+    case "record p c d"
+        speak "start task record pcd"
+        exec "record_pcd"
+    end
+    case "cancel mission and exit"
+    end
+end
+
+print "please press enter..."
+gets
+speak "goodbye"
+system echo "The End"
+
