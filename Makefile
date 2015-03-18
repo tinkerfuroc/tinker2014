@@ -1,30 +1,39 @@
 # Makefile of tinker2014
 # created by bss at 2014-12-28
-# Last modified: 2014-12-28, 19:58:20
+# Last modified: 2015-03-18, 16:53:37
 
 CD=cd
 PWD=pwd
 CATKIN=catkin_make
 CLEAN=catkin_make clean
+FLGS=
+PKGS=
 
 all: dev downloaded driver logic decision
 
-.PHONY: dev downloaded driver logic decision
+.PHONY: all dev downloaded driver logic decision clean
 
-dev:
-	$(CD) ./dev && $(PWD) && $(CATKIN)
+pkgs:
+ifneq "$(strip $(pkg))" ""
+PKGS=--pkg
+PKGS+=$(pkg)
+endif
+FLGS+=$(PKGS)
 
-downloaded:
-	$(CD) ./downloaded && $(PWD) && $(CATKIN)
+dev: pkgs
+	$(CD) ./dev && $(PWD) && $(CATKIN)$ $(FLGS)
 
-driver:
-	$(CD) ./driver && $(PWD) && $(CATKIN)
+downloaded: pkgs
+	$(CD) ./downloaded && $(PWD) && $(CATKIN)$ $(FLGS)
 
-logic:
-	$(CD) ./logic && $(PWD) && $(CATKIN)
+driver: pkgs
+	$(CD) ./driver && $(PWD) && $(CATKIN)$ $(FLGS)
 
-decision:
-	$(CD) ./decision && $(PWD) && $(CATKIN)
+logic: pkgs
+	$(CD) ./logic && $(PWD) && $(CATKIN)$ $(FLGS)
+
+decision: pkgs
+	$(CD) ./decision && $(PWD) && $(CATKIN)$ $(FLGS)
 
 clean_dev:
 	$(CD) ./dev && $(PWD) && $(CLEAN)
