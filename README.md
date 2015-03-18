@@ -120,6 +120,8 @@ TINKER_WORKSPACE下执行make相当于在各工作空间执行catkin_make，
 ```bash
 make                # 全部编译
 make driver         # 编译driver workspace
+make dev pkg=d_cv   # 编译指定package
+make driver pkg="d_cv d_pcl"
 make clean          # 全部清理
 make clean_driver   # 清理driver workspace
 ```
