@@ -19,6 +19,10 @@ before_install: # Use this to prepare the system to install prerequisites or dep
   - sudo apt-get update -qq
   - sudo apt-get install -qq -y python-catkin-pkg python-rosdep python-wstool
   - sudo apt-get install -qq -y ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-ros ros-$ROS_DISTRO-ros-base
+  - sudo apt-get install -qq -y ros-$ROS_DISTRO-cv-bridge ros-$ROS_DISTRO-image-transport ros-$ROS_DISTRO-pcl-ros
+  - sudo apt-get install -qq -y ros-$ROS_DISTRO-sensor-msgs
+  - sudo apt-get install -qq -y libopencv-dev
+  - sudo apt-get install -qq -y libpcl-1.7-all-dev
   # Setup rosdep
   - sudo rosdep init
   - rosdep update
