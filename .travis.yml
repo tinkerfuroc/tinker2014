@@ -8,6 +8,8 @@ compiler:
   - gcc
 notifications:
   email: false
+cache:
+  apt: true
 before_install: # Use this to prepare the system to install prerequisites or dependencies
   # Define some config vars
   - export ROS_DISTRO=hydro
