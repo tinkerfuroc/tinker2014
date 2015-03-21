@@ -99,9 +99,12 @@ git submodule update   # 克隆子模块
 在.bashrc中添加以下内容：
 
 ```bash
-TINKER_WORKSPACE=~/tinker2014         # 可自行修改
-source $TINKER_WORKSPACE/tinkersetup.bash
+source ~/tinker2014/tinkersetup.bash
 ```
+
+注：如果使用的不是bash，
+需要在此之前设置 TINKER_WORKSPACE=~/tinker2014
+
 
 建议在.bashrc中添加：
 
@@ -109,7 +112,7 @@ source $TINKER_WORKSPACE/tinkersetup.bash
 ROS_WORKSPACE=$TINKER_WORKSPACE
 ```
 
-之后建议先完整编译一次，再做别的操作。
+之后先完整编译一次，再做别的操作。
 
 ####编译
 
@@ -117,6 +120,7 @@ ROS_WORKSPACE=$TINKER_WORKSPACE
 TINKER_WORKSPACE下执行make相当于在各工作空间执行catkin_make，
 执行make clean相当于在各工作空间执行catkin_make clean。
 也支持make dev或make clean_dev等用法。
+可以只编译指定的package。
 
 ```bash
 make                # 全部编译
