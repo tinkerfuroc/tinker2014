@@ -8,6 +8,3 @@ make downloaded
 make driver pkg="d_say d_cv"
 make logic pkg=l_sphinx_wrapper
 make decision pkg=answer_questions
-
-exit 0
-
