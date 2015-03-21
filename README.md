@@ -2,8 +2,7 @@ tinker2014
 ==========
 
 tinker2014
-
-[![Build Status](https://travis-ci.org/bssthu/tinker2014.png?branch=master)](https://travis-ci.org/bssthu/tinker2014)
+[![Build Status](https://travis-ci.org/tinkerfuroc/tinker2014.png?branch=master)](https://travis-ci.org/tinkerfuroc/tinker2014)
 
 ------
 
