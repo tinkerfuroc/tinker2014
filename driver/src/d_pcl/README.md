@@ -104,6 +104,10 @@ roslaunch d_pcl primesense_to_pcl.launch
 
 ###配置方法
 
+需要安装ros indigo，pcl 1.7，以及openni和primesense驱动。
+
+**注意：请先安装ros，再安装pcl，否则容易装错pcl版本导致ros无法安装。**
+
 ##### PCL
 
 - 方案A
@@ -126,6 +130,8 @@ sudo apt-get install libpcl-1.7-all-dev  # 如果版本太旧，请自行编译
 
   - https://drive.google.com/open?id=0B-kQc2-wuHntfjdXYm5EV042SnVtcnZXeUtuUTNYM3c1MlJ1LWhMdGtpV3ZYQ1g2OWZvdGc&authuser=0
 
+要装openni和sensor。
+
 如果版本太旧或无法下载到二进制包，请采用方案B。
 
 - 方案B
@@ -138,3 +144,8 @@ sudo apt-get install libpcl-1.7-all-dev  # 如果版本太旧，请自行编译
 
 这两个版本库已被Fork到组织账户下，以防万一。
 
+##### 安装必要的ros packages：
+
+```bash
+sudo apt-get install ros-indigo-openni2-launch
+```
