@@ -102,3 +102,50 @@ roslaunch d_pcl primesense_to_pcl.launch
 - /pcl/points2  ([sensor_msgs/PointCloud2](http://docs.ros.org/api/sensor_msgs/html/msg/PointCloud2.html))
 - /pcl/points2_xyz  ([sensor_msgs/PointCloud2](http://docs.ros.org/api/sensor_msgs/html/msg/PointCloud2.html))
 
+###配置方法
+
+需要安装ros indigo，pcl 1.7，以及openni和primesense驱动。
+
+**注意：请先安装ros，再安装pcl，否则容易装错pcl版本导致ros无法安装。**
+
+##### PCL
+
+- 方案A
+
+```bash
+sudo apt-get install libpcl-1.7-all-dev  # 如果版本太旧，请自行编译
+```
+
+- 方案B
+
+下载源码，按照源码版本库中的说明安装。（流量预警）
+
+  - https://github.com/PointCloudLibrary/pcl
+
+##### Primesense驱动
+
+- 方案A
+
+下载事先编译好的二进制包并安装：
+
+  - https://drive.google.com/open?id=0B-kQc2-wuHntfjdXYm5EV042SnVtcnZXeUtuUTNYM3c1MlJ1LWhMdGtpV3ZYQ1g2OWZvdGc&authuser=0
+
+要装openni和sensor。
+
+如果版本太旧或无法下载到二进制包，请采用方案B。
+
+- 方案B
+
+下载源码，按照源码版本库中的说明安装
+
+  - OpenNI https://github.com/OpenNI/OpenNI
+
+  - Primesense驱动 https://github.com/PrimeSense/Sensor
+
+这两个版本库已被Fork到组织账户下，以防万一。
+
+##### 安装必要的ros packages：
+
+```bash
+sudo apt-get install ros-indigo-openni2-launch
+```
