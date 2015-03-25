@@ -36,7 +36,7 @@ rosrun answer_questions answer_node.py
 - -i 忽略/answer_questions/start与/anwer_questions/stop的存在，始终工作
 
 ###配置方法
-根据具体问题，编辑 resource 下的 questions.txt,answers.txt 即可。
+根据具体问题，编辑 share/answer_questions 下的 questions.txt,answers.txt 即可。
 
 在联网情况下，可以运行以下代码，下载 google 发音：
 
