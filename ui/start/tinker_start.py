@@ -4,7 +4,7 @@
 # Module        : tinker
 # Author        : bss
 # Creation date : 2015-02-01
-#  Last modified: 2015-02-04, 11:23:00
+#  Last modified: 2015-04-25, 02:54:49
 # Description   : Startup script for tinker, main body.
 #
 
@@ -377,14 +377,15 @@ class Starter:
         self.say_pub = rospy.Publisher(
                 '/say/sentence', String, queue_size=1)
         if not self.isQuiet:
-            self.StartNewTab('rosrun l_sphinx_wrapper recognizer.py')
+            pass
+            #self.StartNewTab('rosrun l_sphinx_wrapper recognizer.py')
 
         self.SwitchBack()
         self.rate = rospy.Rate(2)   # 不能太快,不然语音节点反应不过来
         try:
-            self.RunFile('main')
+            self.RunFile('fair')
         except Exception, e:
-            print('Error: In file main.tinkerstart: %s'%e)
+            print('Error: In file fair.tinkerstart: %s'%e)
         print('Press C-c to exit...')
         self.Wait()
         

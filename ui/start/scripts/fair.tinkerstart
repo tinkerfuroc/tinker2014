@@ -1,0 +1,15 @@
+# -*- coding: utf-8 -*-
+# File          : fair.tinkerstart
+# Module        : tinker
+# Author        : bss
+# Creation Date : 2015-04-25
+#  Last modified: 2015-04-25, 02:55:43
+# Description   :
+#
+
+print "answer_questions temp"
+
+roslaunch l_sphinx_wrapper answer_questions.launch
+
+rosrun answer_questions answer_node.py -i
+
