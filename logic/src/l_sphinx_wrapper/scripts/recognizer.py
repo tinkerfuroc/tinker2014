@@ -62,22 +62,26 @@ class recognizer(object):
         asr.set_property('configured', True)
         asr.set_property('dsratio', 1)
 
+        param_ok = True
         # parameters for fsg and dic
         try:
             fsg_ = rospy.get_param('~fsg')
             asr.set_property('fsg', fsg_)
         except:
             rospy.logerr('Please specify a fsg grammar file')
+            param_ok = False
         try:
             dict_ = rospy.get_param('~dict')
             asr.set_property('dict', dict_)
         except:
             rospy.logerr('Please specify a dictionary')
+            param_ok = False
 
         bus = self.pipeline.get_bus()
         bus.add_signal_watch()
         bus.connect('message::application', self.application_message)
-        #self.start(None)
+        if param_ok:
+            self.start(None)
         gtk.main()
         
     def shutdown(self):
