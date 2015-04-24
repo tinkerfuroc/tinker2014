@@ -38,7 +38,7 @@ def Usage():
 
 def playSound(sent):
     mp3dir = rospkg.RosPack().get_path('d_say') \
-            + '../../../share/d_say/sounds'
+            + '/../../../share/d_say/sounds'
     if os.path.exists(mp3dir + '/' + sent + '.mp3'):
         os.system('mplayer "' + mp3dir + '/' + sent + '.mp3"')
     else:
