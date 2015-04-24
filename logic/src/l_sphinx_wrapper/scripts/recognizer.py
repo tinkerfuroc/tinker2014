@@ -4,7 +4,7 @@
 # Module        : l_sphinx_wrapper@tinker
 # Author        : bss
 # Creation date : 2015-02-02
-#  Last modified: 2015-02-02, 23:47:31
+#  Last modified: 2015-04-25, 03:07:10
 # Description   : pocketsphinx wrapper. support 
 #       inspired by http://wiki.ros.org/pocketsphinx
 #
@@ -62,22 +62,26 @@ class recognizer(object):
         asr.set_property('configured', True)
         asr.set_property('dsratio', 1)
 
+        ok = True
         # parameters for fsg and dic
         try:
             fsg_ = rospy.get_param('~fsg')
             asr.set_property('fsg', fsg_)
         except:
             rospy.logerr('Please specify a fsg grammar file')
+            ok = False
         try:
             dict_ = rospy.get_param('~dict')
             asr.set_property('dict', dict_)
         except:
             rospy.logerr('Please specify a dictionary')
+            ok = False
 
         bus = self.pipeline.get_bus()
         bus.add_signal_watch()
         bus.connect('message::application', self.application_message)
-        #self.start(None)
+        if ok:
+            self.start(None)
         gtk.main()
         
     def shutdown(self):

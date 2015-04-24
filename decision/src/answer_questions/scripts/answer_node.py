@@ -4,7 +4,7 @@
 # Module        : answer_questions@tinker
 # Author        : bss
 # Creation date : 2014-05-09
-#  Last modified: 2015-01-01, 15:40:00
+#  Last modified: 2015-04-25, 03:17:48
 # Description   : Answer questions listed in resource/
 #
 
@@ -70,10 +70,10 @@ class answer_handler:
         except rospy.ServiceException, e:
             print("Service call failed: %s"%e)
 
-        playSound('Your question is:')
-        playSound(ques)
-        playSound('My answer is:')
-        if ques == 'what time is it':
+#        playSound('Your question is:')
+#        playSound(ques)
+#        playSound('My answer is:')
+        if (ques == 'what time is it' and False):
             hour = int(time.strftime('%H'))
             hour = (hour + 1) % 12
             minute = int(time.strftime('%M'))
@@ -87,9 +87,11 @@ class answer_handler:
         if self.count >= 3:
             self.allow = False
         if self.allow or self.force_allow:
-            playSound('Please continue.')
+            #playSound('Please continue.')
+            pass
         else:
-            playSound('Thank you for your questions. Goodbye.')
+            #playSound('Thank you for your questions. Goodbye.')
+            pass
 
         #start recognizer
         try:

@@ -4,7 +4,7 @@
 # Module        : d_say@tinker
 # Author        : bss
 # Creation date : 2014-07-21
-#  Last modified: 2015-02-01, 22:49:52
+#  Last modified: 2015-04-25, 03:23:33
 # Description   : say something through loudspeaker.
 #
 
@@ -37,8 +37,9 @@ def Usage():
     print('ros topic: /say/sentence')
 
 def playSound(sent):
+    sent = sent.strip()
     mp3dir = rospkg.RosPack().get_path('d_say') \
-            + '../../../share/d_say/sounds'
+            + '/../../../share/d_say/sounds'
     if os.path.exists(mp3dir + '/' + sent + '.mp3'):
         os.system('mplayer "' + mp3dir + '/' + sent + '.mp3"')
     else:
