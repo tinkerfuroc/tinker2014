@@ -4,7 +4,7 @@
 # Module        : l_sphinx_wrapper@tinker
 # Author        : bss
 # Creation date : 2015-02-02
-#  Last modified: 2015-04-25, 03:07:10
+#  Last modified: 2015-04-25, 20:20:50
 # Description   : pocketsphinx wrapper. support 
 #       inspired by http://wiki.ros.org/pocketsphinx
 #
@@ -24,6 +24,7 @@ import gobject
 import pygst
 pygst.require('0.10')
 gobject.threads_init()
+
 import gst
 
 from std_msgs.msg import String
@@ -52,35 +53,54 @@ class recognizer(object):
         rospy.Service("/recognizer/change_task",
                 ChangeTask, self.changeTask)
 
+        # hmm model
+        # hub4wsj_sc_8k by default,
+        # for chinese, use tdt_sc_8k
+        hmm_ = ''
+        lm_init_ = ''
+        dict_init_ = ''
+        try:
+            hmm_ = rospy.get_param('~hmm')
+            lm_init_ = rospy.get_param('~lm_init')
+            dict_init_ = rospy.get_param('~dict_init')
+        except:
+            rospy.loginfo('No hmm/lm/dict specified. Use default.')
+
         # configure pipeline
-        self.pipeline = gst.parse_launch('gconfaudiosrc ! audioconvert '
-                + '! audioresample ! vader name=vad auto-threshold=true '
-                + '! pocketsphinx name=asr ! fakesink')
+        gst_launch_cmd = 'gconfaudiosrc ! audioconvert ' \
+                + '! audioresample ! vader name=vad auto_threshold=true '
+        if (hmm_ != '' and lm_init_ != '' and dict_init_ != ''):
+            gst_launch_cmd += '! pocketsphinx ' \
+            + 'hmm=%s lm=%s dict=%s ' % (hmm_, lm_init_, dict_init_) \
+            + 'name=asr ! fakesink'
+        else:
+            gst_launch_cmd += '! pocketsphinx name=asr ! fakesink'
+        self.pipeline = gst.parse_launch(gst_launch_cmd)
         asr = self.pipeline.get_by_name('asr')
         asr.connect('partial_result', self.asr_partial_result)
         asr.connect('result', self.asr_result)
         asr.set_property('configured', True)
         asr.set_property('dsratio', 1)
 
-        ok = True
+        param_ok = True
         # parameters for fsg and dic
         try:
             fsg_ = rospy.get_param('~fsg')
             asr.set_property('fsg', fsg_)
         except:
             rospy.logerr('Please specify a fsg grammar file')
-            ok = False
+            param_ok = False
         try:
             dict_ = rospy.get_param('~dict')
             asr.set_property('dict', dict_)
         except:
             rospy.logerr('Please specify a dictionary')
-            ok = False
+            param_ok = False
 
         bus = self.pipeline.get_bus()
         bus.add_signal_watch()
         bus.connect('message::application', self.application_message)
-        if ok:
+        if param_ok:
             self.start(None)
         gtk.main()
         
@@ -145,13 +165,13 @@ class recognizer(object):
 
         try:
             asr.set_property('fsg', fsg_)
-        except Exception, e:
+        except Exception as e:
             rospy.logerr('Error: %s'%e)
             rospy.logerr('The fsg grammar file %s is invalid.' % fsg_)
             return ChangeTaskResponse(False)
         try:
             asr.set_property('dict', dict_)
-        except Exception, e:
+        except Exception as e:
             rospy.logerr('Error: %s'%e)
             rospy.logerr('The dictionary %s is invalid.' % dict_)
             return ChangeTaskResponse(False)
@@ -183,7 +203,7 @@ class recognizer(object):
 
     def partial_result(self, hyp, uttid):
         """ Delete any previous selection, insert text and select it. """
-        print "Partial: " + hyp
+        print("Partial: " + hyp)
 
     def final_result(self, hyp, uttid):
         """ Insert the final result. """
