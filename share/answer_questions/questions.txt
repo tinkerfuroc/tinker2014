@@ -1,15 +1,16 @@
-what's the date today
-what is your name robot
-where are you come from
-how's the weather today
-why are you here today
-who will win the supreme scholarship
-who is the best poet you ever known
-who is the supervisor of future robotics club
-who is the new headmaster of our university
-which dining hall has the most delicious spicy pot
-which university is the best in the world
-where can i find grilled wings
-how many dining halls is there in our university
-can you answer questions in chinese
-i love you so much do you love me
+今天 星期几 呢
+你的 名字 叫什么
+你 来自 哪里
+今天 天气 怎么样
+你 今天 为什么 在这里
+宇宙 中心 在 哪里
+特奖 的 热门 人选 有 谁
+诗词 格律 哪 家 强
+你们 团队 的 辅导员 是 谁
+清华大学 的 新 校长 是 谁
+哪里 的 香 锅 最 好吃
+世界 一流 大学 在 哪里
+哪里 的 烤 翅 最 好吃
+清华 有 几个 食堂
+你能 回答 别的 问题 吗
+我 喜欢 你 你 喜欢 我 吗
