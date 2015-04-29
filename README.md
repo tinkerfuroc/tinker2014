@@ -60,17 +60,22 @@ tinker2014/
 
 |-decision/
 
+|-navigation/
+
 |-share/
 
 |-ui/
 
-在tinker2014文件夹下放5个catkin workspace，
+在tinker2014文件夹下放6个catkin workspace，
 各自独立开发。
 
 其中downloaded中放下载下来的package，
 package通过submodule的方式添加到tinker2014版本库中。
 
 dev中放刚创建或临时的package。
+
+navigation是一个submodule，
+用来放navigation组使用的package。
 
 downloaded中的package应尽量保持原样。
 
@@ -161,6 +166,15 @@ ROS建议的方法命名：
 ROS建议的方法命名，
 如answer_questions
 
+- navigation中自建的package以nv开头，
+然后按
+ROS建议到方法命名：
+所有字母小写，
+以下划线分隔，
+如nv_fake_scan
+
+- navigation中下载的package保持原名
+
 ####node
 
 - 按ROS建议的方式命名：
@@ -222,3 +236,4 @@ ROS建议的方法命名，
   - 认真填写改动说明后提交
   - tinkerfuroc:master分支更新后，创建一个路径为 YOUR_NAME:master  ...  tinkerfuroc:master 的pull request，并自己合并之
   - 再依据YOUR_NAME:master更新YOUR_NAME:dev，创建pull request或者删了重建都可以
+
