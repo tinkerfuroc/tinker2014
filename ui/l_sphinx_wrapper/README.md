@@ -52,6 +52,14 @@ python jsgf2fsg.py -t TASK_NAME
 roslaunch l_sphinx_wrapper TASK_NAME.launch
 ```
 
+注：如果需要支持中文，
+请给 init.py 传 -l zh 参数：
+
+```bash
+./init.py -l zh --init TASK_NAME
+./init.py -l zh --task TASK_NAME
+```
+
 ------
 
 ###toUpper.py

@@ -1,6 +1,6 @@
 # Makefile of tinker2014
 # created by bss at 2014-12-28
-# Last modified: 2015-03-18, 16:53:37
+# Last modified: 2015-04-29, 19:51:53
 
 CD=cd
 PWD=pwd
@@ -9,9 +9,9 @@ CLEAN=catkin_make clean
 FLGS=
 PKGS=
 
-all: dev downloaded driver logic decision
+all: dev downloaded driver logic decision navigation
 
-.PHONY: all dev downloaded driver logic decision clean
+.PHONY: all dev downloaded driver logic decision navigation clean
 
 pkgs:
 ifneq "$(strip $(pkg))" ""
@@ -35,6 +35,9 @@ logic: pkgs
 decision: pkgs
 	$(CD) ./decision && $(PWD) && $(CATKIN)$ $(FLGS)
 
+navigation: pkgs
+	$(CD) ./navigation && $(PWD) && $(CATKIN)$ $(FLGS)
+
 clean_dev:
 	$(CD) ./dev && $(PWD) && $(CLEAN)
 	
@@ -50,4 +53,8 @@ clean_logic:
 clean_decision:
 	$(CD) ./decision && $(PWD) && $(CLEAN)
 	
-clean: clean_dev clean_downloaded clean_driver clean_logic clean_decision
+clean_navigation:
+	$(CD) ./navigation && $(PWD) && $(CLEAN)
+	
+clean: clean_dev clean_downloaded clean_driver clean_logic clean_decision clean_decision
+
