@@ -69,6 +69,12 @@ sphinxbase, pocketsphinx, libsphinxbase-dev, libpocketsphinx-dev
 等软件包，
 请用 apt-get remove 卸载。
 
+**之后需要删除gst临时文件:**
+
+```bash
+rm ~/.gstreamer-0.10/registry.x86_64.bin
+```
+
 修改方法如下：
 
 - 获取源码
