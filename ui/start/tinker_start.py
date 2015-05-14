@@ -373,7 +373,7 @@ class Starter:
             self.StartNewTab('roscore')
         rospy.init_node('tinker_start', anonymous=False)
         if not self.isQuiet:
-            self.StartNewTab('rosrun d_say say_node.py')
+            self.StartNewTab('export GST_PLUGIN_PATH=/usr/local/lib/gstreamer-0.10 && rosrun d_say say_node.py')
         self.say_pub = rospy.Publisher(
                 '/say/sentence', String, queue_size=1)
         if not self.isQuiet:

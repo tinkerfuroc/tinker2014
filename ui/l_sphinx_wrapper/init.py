@@ -92,10 +92,9 @@ def initDir(task, lang):
     fp = open(outdir + '/' + task + '.launch', 'w')
     fp.write('<launch>\n')
     fp.write('\n')
-    if lang == 'zh':
-        fp.write('  <env name="GST_PLUGIN_PATH" '
-                + 'value="/usr/local/lib/gstreamer-0.10" />\n')
-        fp.write('\n')
+    fp.write('  <env name="GST_PLUGIN_PATH" '
+            + 'value="/usr/local/lib/gstreamer-0.10" />\n')
+    fp.write('\n')
 
     fp.write('  <node name="recognizer" pkg="l_sphinx_wrapper" ' \
             + 'type="recognizer.py" output="screen">\n')

@@ -1,0 +1,5 @@
+/build
+/devel
+*.pyc
+*.swp
+.catkin_workspace

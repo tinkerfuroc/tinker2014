@@ -11,6 +11,6 @@ source $TINKER_WORKSPACE/dev/devel/setup.bash
 source $TINKER_WORKSPACE/driver/devel/setup.bash --extend
 source $TINKER_WORKSPACE/logic/devel/setup.bash --extend
 source $TINKER_WORKSPACE/decision/devel/setup.bash --extend
-source $TINKER_WORKSPACE/navigation/devel/setup.bash --extend
+# source $TINKER_WORKSPACE/navigation/devel/setup.bash --extend
 source $TINKER_WORKSPACE/downloaded/devel/setup.bash --extend
 
