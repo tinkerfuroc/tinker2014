@@ -6,8 +6,8 @@ import sys
 sys.path.append('../../../devel/lib/python2.7/dist-packages')
 
 import rospy
-import fw_send
-from fw_send.srv import *
+import d_firmware
+from d_firmware.srv import *
 from threading import Lock
 from socket import socket,AF_INET,SOCK_DGRAM
 
@@ -24,6 +24,7 @@ def send_command_handler(request):
         s.connect((ECHO_SERVER_ADDRESS, ECHO_PORT))
         s.settimeout(0.05)
         s.sendall(request.command)
+        s.settimeout(request.recv_wait_time)
         data = s.recv(1024)
         s.close()
         return data

@@ -1,3 +1,4 @@
 string command
+float32 recv_wait_time
 ---
 string echo

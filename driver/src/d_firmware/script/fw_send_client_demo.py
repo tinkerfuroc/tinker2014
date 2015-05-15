@@ -9,7 +9,7 @@ import rospy
 from fw_send.srv import *
 
 
-def client_demo(command):
+def client_demo(command, recv_wait_time):
     rospy.wait_for_service('send_command')
     try:
         send_command = rospy.ServiceProxy('send_command', SendCommand)
@@ -22,7 +22,7 @@ def client_demo(command):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 2:
+    if len(sys.argv) >= 2:
         print "fw_send_client_demo"
         print "command" + sys.argv[1]
-        print client_demo(sys.argv[1])
+        print client_demo(sys.argv[1], 10)
