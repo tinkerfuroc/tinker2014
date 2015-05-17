@@ -19,6 +19,9 @@ tinker2014
 ####d_pcl
 pcl相关驱动
 
+####d_firmware
+固件操作与通讯
+
 ##logic工作空间
 
 ####l_sphinx_wrapper
