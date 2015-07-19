@@ -47,7 +47,8 @@ class answer_handler:
         while isPlaying:
             try:
                 func_IsPlaying = rospy.ServiceProxy('/say/IsPlaying', IsPlaying)
-                isPlaying = func_IsPlaying()
+                resp = func_IsPlaying()
+                isPlaying = resp.playing
             except rospy.ServiceException, e:
                 print('fail: %s'%e)
                 isPlaying = False
