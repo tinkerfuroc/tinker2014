@@ -23,6 +23,9 @@ rosrun d_say say_node.py
 ######订阅的topics
 - /say/sentence  ([std_msgs/String](http://docs.ros.org/api/std_msgs/html/msg/String.html))
 
+###### 提供的 services
+- /say/IsPlaying (IsPlaying, 内容为 bool )
+
 ###配置方法
 
 ###### 安装必要的软件包：
