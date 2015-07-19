@@ -43,7 +43,6 @@ class answer_handler:
         return EmptyResponse()
 
     def waitForSay(self):
-        rospy.wait_for_service('/say/IsPlaying')
         isPlaying = True
         while isPlaying:
             try:
