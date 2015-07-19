@@ -42,18 +42,6 @@ class answer_handler:
         self.allow = False
         return EmptyResponse()
 
-    def waitForSay(self):
-        isPlaying = True
-        while isPlaying:
-            try:
-                func_IsPlaying = rospy.ServiceProxy('/say/IsPlaying', IsPlaying)
-                resp = func_IsPlaying()
-                isPlaying = resp.playing
-            except rospy.ServiceException, e:
-                print('fail: %s'%e)
-                isPlaying = False
-            time.sleep(0.2)
-
     def getQuestionCallback(self, data):
         if not self.force_allow:
             if not self.allow:
@@ -76,7 +64,6 @@ class answer_handler:
         print(ques + '?')
         print('-' + ans)
 
-        self.waitForSay()
         #stop recognizer
         try:
             stop_pock = rospy.ServiceProxy('/recognizer/stop', Empty)
@@ -84,21 +71,13 @@ class answer_handler:
         except rospy.ServiceException, e:
             print("Service call failed: %s"%e)
 
-        playSound('Your question is:')
-        playSound(ques)
-        playSound('My answer is:')
-        if ques == 'what time is it':
-            hour = int(time.strftime('%H'))
-            hour = (hour + 1) % 12
-            minute = int(time.strftime('%M'))
-            ans = str(hour) + ' ' + str(minute)
-            print(ans)
-            playSound(ans)
-        else:
-            playSound(ans)
+        #playSound('Your question is:')
+        #playSound(ques)
+        #playSound('My answer is:')
+        playSound(ans)
         
         self.count += 1
-        if self.count >= 3:
+        if self.count >= 5:
             self.allow = False
         if self.allow or self.force_allow:
             playSound('Please continue.')
@@ -121,6 +100,20 @@ def Usage():
 
 def playSound(answer):
     say_pub.publish(answer)
+    time.sleep(0.5)
+    waitForSay()
+
+def waitForSay():
+    isPlaying = True
+    while isPlaying:
+        try:
+            func_IsPlaying = rospy.ServiceProxy('/say/IsPlaying', IsPlaying)
+            resp = func_IsPlaying()
+            isPlaying = resp.playing
+        except rospy.ServiceException, e:
+            print('fail: %s'%e)
+            isPlaying = False
+        time.sleep(0.5)
 
 def main(argv):
     try:
