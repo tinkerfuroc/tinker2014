@@ -26,6 +26,7 @@ rosrun answer_questions answer_node.py
 ######调用的services
 - /recognizer/start ([std_srvs/Empty](http://docs.ros.org/api/std_srvs/html/srv/Empty.html))
 - /recognizer/stop ([std_srvs/Empty](http://docs.ros.org/api/std_srvs/html/srv/Empty.html))
+- /say/IsPlaying (IsPlaying, 内容为 bool )
 
 ######提供的services
 - /answer_questions/start ([std_srvs/Empty](http://docs.ros.org/api/std_srvs/html/srv/Empty.html))

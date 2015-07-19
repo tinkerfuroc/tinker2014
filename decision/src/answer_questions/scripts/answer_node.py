@@ -41,6 +41,18 @@ class answer_handler:
         self.allow = False
         return EmptyResponse()
 
+    def waitForSay(self):
+        rospy.wait_for_service('/say/IsPlaying')
+        isPlaying = True
+        while isPlaying:
+            try:
+                func_IsPlaying = rospy.ServiceProxy('/say/IsPlaying', IsPlaying)
+                isPlaying = func_IsPlaying()
+            except rospy.ServiceException, e:
+                print('fail: %s'%e)
+                isPlaying = False
+            time.sleep(0.2)
+
     def getQuestionCallback(self, data):
         if not self.force_allow:
             if not self.allow:
@@ -62,7 +74,8 @@ class answer_handler:
             sys.exit(1)
         print(ques + '?')
         print('-' + ans)
-    
+
+        self.waitForSay()
         #stop recognizer
         try:
             stop_pock = rospy.ServiceProxy('/recognizer/stop', Empty)
