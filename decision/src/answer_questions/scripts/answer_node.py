@@ -16,6 +16,7 @@ import rospkg
 import rospy
 from std_msgs.msg import String
 from std_srvs.srv import *
+from d_say.srv import *
 
 ANS = {}
 say_pub = rospy.Publisher('/say/sentence', String, queue_size=1)
